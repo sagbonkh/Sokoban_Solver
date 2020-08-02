@@ -1,0 +1,6 @@
+*.o
+/Build
+*.tmp
+*~
+*.swp
+.gdb_history
