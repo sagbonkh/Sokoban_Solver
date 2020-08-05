@@ -125,17 +125,18 @@ std::pair<Error, const Map*> MapBuilder::build() const {
     newMap->set(p, StaticType::Target);
   }
 
-  std::unordered_map<Coordinate, BoxState>* boxMap = state->getBoxes();
+	// TODO: This all must be fixed:
+	std::unordered_map<Coordinate, BoxState> *boxMap = state->getBoxes();
 
   for (Coordinate p : _boxes) {
     if (newMap->get(p) == StaticType::Block)
       return std::pair<Error, const Map*>(Error::SpotTaken, nullptr);
 
-    if (boxMap->count(p) > 0) {
+		if (boxMap->count(p) > 0) {
       return std::pair<Error, const Map*>(Error::SpotTaken, nullptr);
     }
 
-    boxMap->insert(std::pair<Coordinate, BoxState>(p, BoxState()));
+		boxMap->insert(std::pair<Coordinate, BoxState>(p, BoxState()));
   }
 
   state->setPlayerPosition(_player);

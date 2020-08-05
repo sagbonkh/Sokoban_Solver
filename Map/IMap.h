@@ -1,12 +1,10 @@
 // Copyright Tobias Faller 2016
 
-#ifndef PROJEKT_MAP_MAP_H_
-#define PROJEKT_MAP_MAP_H_
+#pragma once
 
-#include <gtest/gtest_prod.h>
-
-#include "State.h"
-#include "StaticMap.h"
+#include "IMap.h"
+#include "IState.h"
+#include "IStaticMap.h"
 
 namespace Sokoban {
 
@@ -15,8 +13,6 @@ namespace Sokoban {
  */
 class Map {
  protected:
-  const State* _initState;
-  const StaticMap* _map;
 
   const uint32_t _width;
   const uint32_t _height;
@@ -25,7 +21,7 @@ class Map {
   /*
    * Constructs a new map with the given movable and static components.
    */
-  Map(const State* state, const StaticMap* map, uint32_t width,
+	Map(const IState *state, const IStaticMap *map, uint32_t width,
       uint32_t height);
 
   /*

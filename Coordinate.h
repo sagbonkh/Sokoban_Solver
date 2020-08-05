@@ -7,6 +7,8 @@
 
 #include <functional>
 
+#include "Direction.h"
+
 namespace Sokoban {
 
 /*
@@ -25,6 +27,8 @@ struct Coordinate {
    * Creates a new location with provided coordinates.
    */
   Coordinate(uint32_t x, uint32_t y);
+
+  Coordinate(const Coordinate &) = default;
 
   /*
    * Destroys this coordinate object.
@@ -45,6 +49,8 @@ struct Coordinate {
    * Returns the y coordinate of this object.
    */
   uint32_t getY() const;
+
+  Coordinate getAdjacent(Direction dir) const;
 
   /*
    * Compares two locations and returns true if bot x and y coordinates are
@@ -69,7 +75,7 @@ namespace std {
  */
 template <> struct hash<Sokoban::Coordinate> {
     size_t operator()(Sokoban::Coordinate const & c) const noexcept {
-        return hash<uint64_t>()(static_cast<uint64_t>(c.x)
+        return hash<uint64_t>()(static_cast<uint64_t>(c.x) // @suppress("Ambiguous problem")
             ^ (static_cast<uint64_t>(c.y) << 32));
     }
 };

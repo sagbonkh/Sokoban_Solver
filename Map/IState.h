@@ -1,13 +1,10 @@
 // Copyright Tobias Faller 2016
-
-#ifndef PROJEKT_MAP_STATE_H_
-#define PROJEKT_MAP_STATE_H_
+#pragma once
 
 #include <stdint.h>
 
 #include <unordered_map>
 
-#include "./IState.h"
 #include "../BoxState.h"
 #include "../Coordinate.h"
 
@@ -18,48 +15,37 @@ namespace Sokoban {
  * For easier computation the dead lock state of the boxes are stored in
  * the BoxState structure.
  */
-class State: public IState {
- protected:
-  Coordinate _player;
-  std::unordered_map<Coordinate, BoxState> _boxes;
-
-  /*
-   * Protected constructor for copying.
-   */
-  explicit State(const State* state);
-
+class IState {
  public:
   /*
    * Creates a new state.
    */
-  State();
+	IState() = default;
 
   /*
    * Destroys this state and its data.
    */
-	virtual ~State() = default;
+	virtual ~IState() = default;
 
   /*
    * Returns the coordinates of the player.
    */
-	Coordinate getPlayerPosition() const override;
+	virtual Coordinate getPlayerPosition() const = 0;
 
   /*
    * Sets the coordinates of the player.
    */
-	void setPlayerPosition(Coordinate playerPosition) override;
+	virtual void setPlayerPosition(Coordinate playerPosition) = 0;
 
   /*
    * Returns the list of boxes and their states.
    */
-	const std::unordered_map<Coordinate, BoxState> getBoxes() const override;
+	virtual const std::unordered_map<Coordinate, BoxState> getBoxes() const = 0;
 
   /*
    * Creates a copy of this State.
    */
-	State* clone() const override;
+	virtual IState* clone() const = 0;
 };
 
 }  // namespace Sokoban
-
-#endif  // PROJEKT_MAP_STATE_H_

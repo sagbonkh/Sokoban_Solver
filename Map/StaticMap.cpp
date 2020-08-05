@@ -9,7 +9,8 @@
 namespace Sokoban {
 
 StaticMap::StaticMap(uint32_t width, uint32_t height)
-      : _width(width), _height(height), _targets() {
+      :
+		IStaticMap(width, height) {
   uint32_t size = width * height;
   size = (size / 4) + ((size % 4) ? 1 : 0);
 
@@ -17,7 +18,8 @@ StaticMap::StaticMap(uint32_t width, uint32_t height)
   memset(_map, 0, size * sizeof(uint8_t));
 }
 StaticMap::StaticMap(const StaticMap* map)
-    : _width(map->_width), _height(map->_height), _targets(map->_targets) {
+    :
+		IStaticMap(map->_width, map->_height) {
   uint32_t size = _width * _height;
   size = (size / 4) + ((size % 4) ? 1 : 0);
 
@@ -105,19 +107,9 @@ bool StaticMap::isTarget(Coordinate position) const {
   return this->isTarget(position.x, position.y);
 }
 
-uint32_t StaticMap::getWidth() const {
-  return _width;
-}
-uint32_t StaticMap::getHeight() const {
-  return _height;
-}
-
 StaticMap* StaticMap::clone() const {
   return new StaticMap(this);
 }
 
-const std::set<Coordinate>* StaticMap::getTargets() const {
-  return &_targets;
-}
 
 }  // namespace Sokoban
