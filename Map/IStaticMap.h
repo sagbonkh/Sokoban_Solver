@@ -33,15 +33,10 @@ class IStaticMap {
 	friend class MapBuilder;
 
 protected:
-	uint32_t _width;
-	uint32_t _height;
-
-	std::set<Coordinate> _targets;
-
 	/*
 	 * Protected constructor for the SokobanBuilder.
 	 */
-	IStaticMap(uint32_t width, uint32_t height);
+	IStaticMap() = default;
 
 public:
 	/*
@@ -55,7 +50,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual StaticType get(Coordinate position) const = 0;
+	virtual StaticType get(const Coordinate &position) const = 0;
 
 	/*
 	 * Returns the field at the provided position of this map or Nothing if the
@@ -70,7 +65,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isBlock(Coordinate position) const = 0;
+	virtual bool isBlock(const Coordinate &position) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a block.
@@ -84,7 +79,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isTarget(Coordinate position) const = 0;
+	virtual bool isTarget(const Coordinate &position) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a target for a block.
@@ -98,7 +93,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isEmpty(Coordinate position) const = 0;
+	virtual bool isEmpty(const Coordinate &position) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a empty.
@@ -113,7 +108,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual void set(Coordinate position, StaticType type) = 0;
+	virtual void set(const Coordinate &position, StaticType type) = 0;
 
 	/*
 	 * Sets the field at the provided position to a specified type.
@@ -126,12 +121,12 @@ public:
 	/*
 	 * Returns the width of the map.
 	 */
-	virtual uint32_t getWidth() const;
+	virtual uint32_t getWidth() const = 0;
 
 	/*
 	 * Returns the height of the map.
 	 */
-	virtual uint32_t getHeight() const;
+	virtual uint32_t getHeight() const = 0;
 
 	/*
 	 * Clones this StaticMap.
@@ -141,8 +136,7 @@ public:
 	/*
 	 * Returns all positions of the targets.
 	 */
-	virtual const std::set<Coordinate>& getTargets() const;
+	virtual const std::set<Coordinate>& getTargets() const = 0;
 };
 
 }  // namespace Sokoban
-

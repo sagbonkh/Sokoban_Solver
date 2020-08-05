@@ -14,6 +14,7 @@
 #include "../Coordinate.h"
 #include "Map.h"
 #include "IState.h"
+#include "IStaticMap.h"
 #include "State.h"
 
 namespace Sokoban {
@@ -28,11 +29,11 @@ class CellOccupant;
 // Map has (Initial) State and StaticMap
 // StaticMap has walls and targets
 // State has Boxes and Player
-class MapState: private Map, protected IState {
+class MapState: protected IMap, protected IState, protected IStaticMap {
 	Coordinate player;
 	const uint32_t &_height, &_width;
 	// TODO: integrate targets into Cell class
-	const set<Coordinate> _targets;
+	const std::set<Coordinate> _targets;
 	vector<vector<shared_ptr<Cell>>> cells;
 
 	void setPlayerPosition(Coordinate playerPosition) override;
@@ -48,41 +49,47 @@ public:
 	 * Returns the cell at the provided position of this map
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is thrown.
 	 */
-	shared_ptr<Cell> get(const Coordinate &position);
-	shared_ptr<Cell> get(uint32_t x, uint32_t y);
+	shared_ptr<Cell> get(const Coordinate &position) override;
+	shared_ptr<Cell> get(uint32_t x, uint32_t y) override;
 
 	shared_ptr<CellOccupant> getOccupant(const Coordinate &position);
 	shared_ptr<CellOccupant> getOccupant(uint32_t x, uint32_t y);
 
 
-	bool isTarget(const Coordinate &position) const;
-	bool isTarget(uint32_t x, uint32_t y) const;
+	bool isTarget(const Coordinate &position) const override;
+	bool isTarget(uint32_t x, uint32_t y) const override;
 
 	/*
 	 * Returns the width of the map.
 	 */
-	uint32_t getWidth() const;
+	uint32_t getWidth() const override;
 
 	/*
 	 * Returns the height of the map.
 	 */
-	uint32_t getHeight() const;
+	uint32_t getHeight() const override;
 
 	/*
 	 * Returns positions of items in the map
 	 */
 	Coordinate getPlayerPosition() const override;
 	const unordered_map<Coordinate, BoxState> getBoxes() const override;
-	const set<Coordinate>& getTargets() const;
+	const std::set<Coordinate>& getTargets() const;
 
 	int getNumBoxes() const;
 	int getNumCompletedBoxes() const;
 	int getNumBoxesLeft() const;
 	bool isWon() const;
 
-	IState* clone() const override;
-	
-
+	const IState* getInitialState() const override;
+	const IStaticMap* getMap() const override;
+	void set(uint32_t x, uint32_t y, Sokoban::StaticType type) override;
+	bool isBlock(const Sokoban::Coordinate &position) const override;
+	bool isEmpty(uint32_t x, uint32_t y) const override;
+	bool isEmpty(const Sokoban::Coordinate &position) const override;
+	void set(const Sokoban::Coordinate &position, Sokoban::StaticType type)
+			override;
+	bool isBlock(uint32_t x, uint32_t y) const override;
 };
 
 } /* namespace Sokoban */

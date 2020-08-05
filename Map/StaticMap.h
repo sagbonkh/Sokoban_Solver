@@ -13,6 +13,8 @@
 #include "../Coordinate.h"
 
 namespace Sokoban {
+using std::set;
+
 /*
  * Defines the static contents of the current map.
  * E.g: walls and targets.
@@ -25,6 +27,10 @@ class StaticMap: public IStaticMap {
   friend class MapBuilder;
 
  private:
+	uint32_t _width;
+	uint32_t _height;
+
+	std::set<Coordinate> _targets;
   uint8_t* _map;
 
   /*
@@ -35,7 +41,7 @@ class StaticMap: public IStaticMap {
   /*
    * Protected constructor for cloning.
    */
-  explicit StaticMap(const StaticMap* map);
+	explicit StaticMap(const StaticMap *map);
 
  public:
   /*
@@ -49,7 +55,7 @@ class StaticMap: public IStaticMap {
    * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
    * thrown.
    */
-	StaticType get(Coordinate position) const override;
+	StaticType get(const Coordinate &position) const override;
 
   /*
    * Returns the field at the provided position of this map or Nothing if the
@@ -64,7 +70,7 @@ class StaticMap: public IStaticMap {
    * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
    * thrown.
    */
-	bool isBlock(Coordinate position) const override;
+	bool isBlock(const Coordinate &position) const override;
 
   /*
    * Checks if the field at the provided position is a block.
@@ -78,7 +84,7 @@ class StaticMap: public IStaticMap {
    * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
    * thrown.
    */
-	bool isTarget(Coordinate position) const override;
+	bool isTarget(const Coordinate &position) const override;
 
   /*
    * Checks if the field at the provided position is a target for a block.
@@ -92,7 +98,7 @@ class StaticMap: public IStaticMap {
    * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
    * thrown.
    */
-	bool isEmpty(Coordinate position) const override;
+	bool isEmpty(const Coordinate &position) const override;
 
   /*
    * Checks if the field at the provided position is a empty.
@@ -107,7 +113,7 @@ class StaticMap: public IStaticMap {
    * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
    * thrown.
    */
-	void set(Coordinate position, StaticType type) override;
+	void set(const Coordinate &position, StaticType type) override;
 
   /*
    * Sets the field at the provided position to a specified type.
@@ -122,7 +128,9 @@ class StaticMap: public IStaticMap {
    * Clones this StaticMap.
    */
 	StaticMap* clone() const override;
-
+	const std::set<Coordinate>& getTargets() const override;
+	uint32_t getHeight() const override;
+	uint32_t getWidth() const override;
 };
 
 }  // namespace Sokoban

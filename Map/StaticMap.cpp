@@ -8,18 +8,19 @@
 
 namespace Sokoban {
 
+
 StaticMap::StaticMap(uint32_t width, uint32_t height)
       :
-		IStaticMap(width, height) {
+		_width(width), _height(height) {
   uint32_t size = width * height;
   size = (size / 4) + ((size % 4) ? 1 : 0);
 
   _map = new uint8_t[size];
   memset(_map, 0, size * sizeof(uint8_t));
 }
-StaticMap::StaticMap(const StaticMap* map)
+StaticMap::StaticMap(const StaticMap *map)
     :
-		IStaticMap(map->_width, map->_height) {
+		_width(map->getWidth()), _height(map->getHeight()) {
   uint32_t size = _width * _height;
   size = (size / 4) + ((size % 4) ? 1 : 0);
 
@@ -90,26 +91,36 @@ bool StaticMap::isTarget(uint32_t x, uint32_t y) const {
       >= StaticType::Target);
 }
 
-StaticType StaticMap::get(Coordinate position) const {
+StaticType StaticMap::get(const Coordinate &position) const {
   return this->get(position.x, position.y);
 }
-void StaticMap::set(Coordinate position, StaticType type) {
+void StaticMap::set(const Coordinate &position, StaticType type) {
   this->set(position.x, position.y, type);
 }
 
-bool StaticMap::isEmpty(Coordinate position) const {
+bool StaticMap::isEmpty(const Coordinate &position) const {
   return this->isEmpty(position.x, position.y);
 }
-bool StaticMap::isBlock(Coordinate position) const {
+bool StaticMap::isBlock(const Coordinate &position) const {
   return this->isBlock(position.x, position.y);
 }
-bool StaticMap::isTarget(Coordinate position) const {
+bool StaticMap::isTarget(const Coordinate &position) const {
   return this->isTarget(position.x, position.y);
+}
+
+uint32_t StaticMap::getWidth() const {
+	return _width;
+}
+
+uint32_t StaticMap::getHeight() const {
+	return _height;
+}
+
+const set<Coordinate>& StaticMap::getTargets() const {
+	return _targets;
 }
 
 StaticMap* StaticMap::clone() const {
   return new StaticMap(this);
 }
-
-
 }  // namespace Sokoban

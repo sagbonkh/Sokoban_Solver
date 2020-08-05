@@ -8,4 +8,5 @@
 #include "MapState.h"
 
 namespace Sokoban {
+
 }
