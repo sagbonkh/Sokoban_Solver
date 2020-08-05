@@ -20,98 +20,98 @@ namespace Sokoban {
  * function to enable the user to input a player name.
  */
 class HighscoreDisplay {
- private:
-  WINDOW* _window;
+private:
+	WINDOW *_window;
 
-  bool _enabled;
-  Rectangle _location;
+	bool _enabled;
+	Rectangle _location;
 
-  std::string _map;
-  bool _creatingNewScore;
-  std::string _newScoreName;
-  HighscoreEntry* _newScore;
-  HighscoreTable* _highscore;
+	std::string _map;
+	bool _creatingNewScore;
+	std::string _newScoreName;
+	HighscoreEntry *_newScore;
+	HighscoreTable *_highscore;
 
- public:
-  /*
-   * Creates a new HighscoreDisplay drawing its contents to the provided
-   * window.
-   */
-  explicit HighscoreDisplay(WINDOW* window);
+public:
+	/*
+	 * Creates a new HighscoreDisplay drawing its contents to the provided
+	 * window.
+	 */
+	explicit HighscoreDisplay(WINDOW *window);
 
-  /*
-   * Destroys this HighscoreDisplay.
-   */
-  virtual ~HighscoreDisplay();
+	/*
+	 * Destroys this HighscoreDisplay.
+	 */
+	virtual ~HighscoreDisplay();
 
-  /*
-   * Receives input from the user.
-   * Returns false if a quit signal was detected.
-   */
-  bool input(uint32_t key);
+	/*
+	 * Receives input from the user.
+	 * Returns false if a quit signal was detected.
+	 */
+	bool input(uint32_t key);
 
-  /*
-   * Sets if this display is enabled.
-   */
-  void setEnabled(bool enabled);
+	/*
+	 * Sets if this display is enabled.
+	 */
+	void setEnabled(bool enabled);
 
-  /*
-   * Returns if this display is enabled.
-   */
-  bool isEnabled() const;
+	/*
+	 * Returns if this display is enabled.
+	 */
+	bool isEnabled() const;
 
-  /*
-   * Sets the rectangle of this display.
-   */
-  void setRectangle(const Rectangle& rectangle);
+	/*
+	 * Sets the rectangle of this display.
+	 */
+	void setRectangle(const Rectangle &rectangle);
 
-  /*
-   * Returns the rectangle of this dispaly.
-   */
-  const Rectangle& getRectangle() const;
+	/*
+	 * Returns the rectangle of this dispaly.
+	 */
+	const Rectangle& getRectangle() const;
 
-  /*
-   * Sets the new generated highscore entry.
-   */
-  void setNewScore(const HighscoreEntry& entry);
+	/*
+	 * Sets the new generated highscore entry.
+	 */
+	void setNewScore(const HighscoreEntry &entry);
 
-  /*
-   * Sets the state as no new score is created.
-   */
-  void resetNewScore();
+	/*
+	 * Sets the state as no new score is created.
+	 */
+	void resetNewScore();
 
-  /*
-   * Sets the map path of this highscore display.
-   */
-  void setMap(const std::string& map);
+	/*
+	 * Sets the map path of this highscore display.
+	 */
+	void setMap(const std::string &map);
 
-  /*
-   * Loads the saved highscores for the provided map
-   * from the disk.
-   * Returns if the highscore list could be loaded.
-   */
-  bool load();
+	/*
+	 * Loads the saved highscores for the provided map
+	 * from the disk.
+	 * Returns if the highscore list could be loaded.
+	 */
+	bool load();
 
-  /*
-   * Returns the current highscore table.
-   */
-  HighscoreTable* getHighscore() const;
+	/*
+	 * Returns the current highscore table.
+	 */
+	HighscoreTable* getHighscore() const;
 
-  /*
-   * Draws the content onto the screen.
-   */
-  void update();
+	/*
+	 * Draws the content onto the screen.
+	 */
+	void update();
 
-  /*
-   * Returns if the user is typing a name.
-   */
-  bool isTypingName() const;
+	/*
+	 * Returns if the user is typing a name.
+	 */
+	bool isTypingName() const;
 
- protected:
-  /*
-   * Converts a highscore entry to a string.
-   */
-  static std::string scoreToString(const HighscoreEntry& score);
+protected:
+	/*
+	 * Converts a highscore entry to a string.
+	 */
+	static std::string scoreToString(const HighscoreEntry &score);
 };
 
 }  // namespace Sokoban

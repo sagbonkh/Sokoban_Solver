@@ -12,7 +12,6 @@
 #include "CellOccupant.h"
 #include "../Map/MapState.h"
 
-
 namespace Sokoban {
 using std::shared_ptr;
 using std::swap;
@@ -30,11 +29,9 @@ shared_ptr<MapState> CellOccupant::getMapState() const {
 	return _mapState;
 }
 
-
 bool CellOccupant::isTarget() const {
 	return _cell->isTarget();
 }
-
 
 bool CellOccupant::isNothing() const {
 	return getType() == CellOccupantType::Nothing;

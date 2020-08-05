@@ -9,7 +9,6 @@
 
 namespace Sokoban {
 
-
 Cell::Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) :
 		Coordinate(posX, posY), _mapState(mapState) {
 }
@@ -30,7 +29,7 @@ bool Cell::isOccupied() const {
 }
 
 bool Cell::isTarget() const {
-	return _mapState->isTarget(*dynamic_cast<const Coordinate*>(this));
+	return false;
 }
 
 bool Cell::hasPlayer() const {
@@ -38,14 +37,14 @@ bool Cell::hasPlayer() const {
 }
 
 void Cell::setOccupant(const shared_ptr<CellOccupant> &occupant) {
-	if (!canBeOccupied() || !isEmpty())
+	if (!canBeOccupied() || !isUnoccupied())
 		throw "Target cell already occupied.";
 	_occupant = occupant;
 	_occupant->updateCell(getptr());
 }
 
 void Cell::moveOccupantTo(const shared_ptr<Cell> &other) {
-	if (!other->canBeOccupied() || !other->isEmpty()) {
+	if (!other->canBeOccupied() || !other->isUnoccupied()) {
 		throw "Target cell already occupied.";
 	}
 	swap(_occupant, other->_occupant);
@@ -64,12 +63,12 @@ shared_ptr<Cell> Cell::getAdjacent(Direction dir) const {
 
 bool Cell::canPushOccupantIn(Direction dir) {
 	// if we are empty, we have no occupant to push. return true
-	if (isEmpty())
+	if (isUnoccupied())
 		return true;
 	// get adjacent cell (in direction specified)
 	shared_ptr<Cell> adjCell = getAdjacent(dir);
 	// now it's down to if adjacent cell can be occupied and it's not already occupied
-	return adjCell->canBeOccupied() && adjCell->isEmpty();
+	return adjCell->canBeOccupied() && adjCell->isUnoccupied();
 
 }
 
@@ -101,7 +100,7 @@ void Cell::enterFrom(Direction dir, shared_ptr<CellOccupant> occupant) {
 }
 
 // if the cell has no occupant
-bool Cell::isEmpty() const {
+bool Cell::isUnoccupied() const {
 	return !isOccupied();
 }
 
@@ -112,6 +111,18 @@ bool Cell::canBeOccupied() const {
 
 std::shared_ptr<Cell> Cell::getptr() {
 	return shared_from_this();
+}
+
+StaticType Cell::getStaticType() const {
+	return StaticType::Nothing;
+}
+
+Cell::operator StaticType() const {
+	return getStaticType();
+}
+
+bool Cell::isBoundary() const {
+	return false;
 }
 
 } /* namespace Sokoban */

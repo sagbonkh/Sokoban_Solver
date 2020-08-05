@@ -20,8 +20,7 @@ using std::enable_shared_from_this;
 
 class CellOccupant;
 
-
-class Cell : public Coordinate, public enable_shared_from_this<Cell> {
+class Cell: public Coordinate, public enable_shared_from_this<Cell> {
 protected:
 	shared_ptr<MapState> _mapState = nullptr;
 	shared_ptr<CellOccupant> _occupant = nullptr;
@@ -29,7 +28,6 @@ protected:
 	using Coordinate::set;
 	virtual void pushOccupantIn(Direction dir);
 	virtual bool canPushOccupantIn(Direction dir);
-
 
 public:
 	Cell() = delete;
@@ -45,14 +43,16 @@ public:
 	virtual void enterFrom(Direction dir, shared_ptr<CellOccupant> occupant);
 	virtual bool canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant);
 
-
 	shared_ptr<MapState> getMapState() const;
 	virtual bool canBeOccupied() const;
-	virtual bool isOccupied() const;
-	virtual bool isEmpty() const;
+	bool isOccupied() const;
+	virtual bool isUnoccupied() const;
 	virtual bool isTarget() const;
+	virtual bool isBoundary() const;
 	virtual bool hasPlayer() const;
 	virtual bool hasBox() const;
+	virtual StaticType getStaticType() const;
+	operator StaticType() const;
 
 	std::shared_ptr<Cell> getptr();
 

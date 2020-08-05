@@ -23,47 +23,47 @@ namespace Sokoban {
  * Privides an extended sokoban display supporting colors and a choosable
  * scale factor.
  */
-class ColoredDisplay : public CursesDisplay {
- protected:
-  Size _scale;
+class ColoredDisplay: public CursesDisplay {
+protected:
+	Size _scale;
 
- public:
-  /*
-   * Creates a new Display at position (0/0) with
-   * no map.
-   */
-  explicit ColoredDisplay(WINDOW* window);
+public:
+	/*
+	 * Creates a new Display at position (0/0) with
+	 * no map.
+	 */
+	explicit ColoredDisplay(WINDOW *window);
 
-  /*
-   * Destroys the Display leaving the window usable.
-   */
-  virtual ~ColoredDisplay();
+	/*
+	 * Destroys the Display leaving the window usable.
+	 */
+	virtual ~ColoredDisplay();
 
-  /*
-   * Draws the level onto the Display.
-   */
-  virtual void update();
+	/*
+	 * Draws the level onto the Display.
+	 */
+	virtual void update();
 
-  /*
-   * Sets the scale of this display.
-   */
-  void setScale(const Size& scale);
+	/*
+	 * Sets the scale of this display.
+	 */
+	void setScale(const Size &scale);
 
-  /*
-   * Returns the scale of this display.
-   */
-  Size getScale() const;
+	/*
+	 * Returns the scale of this display.
+	 */
+	Size getScale() const;
 
- protected:
-  /*
-   * Returns the color for a displayed character.
-   */
-  static uint16_t getColorForChar(char c);
+protected:
+	/*
+	 * Returns the color for a displayed character.
+	 */
+	static uint16_t getColorForChar(char c);
 
-  /*
-   * Modifies a character before displaying it.
-   */
-  static char modifyChar(char c);
+	/*
+	 * Modifies a character before displaying it.
+	 */
+	static char modifyChar(char c);
 };
 
 }  // namespace Sokoban

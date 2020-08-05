@@ -13,28 +13,29 @@ namespace Sokoban {
 /*
  * Implements a sokoban level parser with normal (expanded) format.
  */
-class ExpandedParser : public BasicParser {
- protected:
-  /*
-   * Parses a line of data and appends it to the MapBuilder.
-   */
-  uint32_t readLine(std::string line, uint32_t lineNumber) override;
+class ExpandedParser: public BasicParser {
+protected:
+	/*
+	 * Parses a line of data and appends it to the MapBuilder.
+	 */
+	uint32_t readLine(std::string line, uint32_t lineNumber) override;
 
-  /*
-   * Returns the next vertical separator for this stream.
-   */
-  ssize_t getNextTerminator(const std::string& data, uint32_t offset) override;
+	/*
+	 * Returns the next vertical separator for this stream.
+	 */
+	ssize_t getNextTerminator(const std::string &data, uint32_t offset)
+			override;
 
- public:
-  /*
-   * Creates a new parser for the normal line-seperated sokoban level format.
-   */
-  ExpandedParser();
+public:
+	/*
+	 * Creates a new parser for the normal line-seperated sokoban level format.
+	 */
+	ExpandedParser();
 
-  /*
-   * Destroys this parser.
-   */
-  virtual ~ExpandedParser();
+	/*
+	 * Destroys this parser.
+	 */
+	virtual ~ExpandedParser();
 };
 
 }  // namespace Sokoban

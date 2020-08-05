@@ -22,7 +22,7 @@ enum class CellOccupantType {
 using std::shared_ptr;
 using std::enable_shared_from_this;
 
-class CellOccupant : public enable_shared_from_this<CellOccupant> {
+class CellOccupant: public enable_shared_from_this<CellOccupant> {
 protected:
 	friend Cell;
 	shared_ptr<MapState> _mapState;
@@ -31,10 +31,10 @@ protected:
 	void updateCell(const shared_ptr<Cell> &cell);
 public:
 	CellOccupant() = delete;
-	CellOccupant(const shared_ptr<MapState> mapState, const shared_ptr<Cell> cell = nullptr);
+	CellOccupant(const shared_ptr<MapState> mapState,
+			const shared_ptr<Cell> cell = nullptr);
 	virtual ~CellOccupant() = default;
 	explicit CellOccupant(const CellOccupant &other) = default;
-
 
 	bool isTarget() const;
 

@@ -15,31 +15,30 @@ namespace Sokoban {
  * Stores the initial state and the fixed blocks of the map.
  */
 class Map: public IMap {
- protected:
+protected:
 	const IState *_initState;
 	const IStaticMap *_map;
 
-
- public:
-  /*
-   * Constructs a new map with the given movable and static components.
-   */
+public:
+	/*
+	 * Constructs a new map with the given movable and static components.
+	 */
 	Map(const IState *state, const IStaticMap *map, uint32_t width,
-      uint32_t height);
+			uint32_t height);
 
-  /*
-   * Destroys the map with its components.
-   */
+	/*
+	 * Destroys the map with its components.
+	 */
 	virtual ~Map();
 
-  /*
-   * Returns the initial state of the map.
-   */
+	/*
+	 * Returns the initial state of the map.
+	 */
 	const IState* getInitialState() const override;
 
-  /*
-   * Returns the static components of this map.
-   */
+	/*
+	 * Returns the static components of this map.
+	 */
 	const IStaticMap* getMap() const override;
 
 };

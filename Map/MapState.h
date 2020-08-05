@@ -29,7 +29,7 @@ class CellOccupant;
 // Map has (Initial) State and StaticMap
 // StaticMap has walls and targets
 // State has Boxes and Player
-class MapState: protected IMap, protected IState, protected IStaticMap {
+class MapState: protected IMap, protected IState, public IStaticMap {
 	Coordinate player;
 	const uint32_t &_height, &_width;
 	// TODO: integrate targets into Cell class
@@ -49,12 +49,10 @@ public:
 	 * Returns the cell at the provided position of this map
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is thrown.
 	 */
-	shared_ptr<Cell> get(const Coordinate &position) override;
-	shared_ptr<Cell> get(uint32_t x, uint32_t y) override;
-
+//	shared_ptr<Cell> get(const Coordinate &position);
+//	shared_ptr<Cell> get(uint32_t x, uint32_t y);
 	shared_ptr<CellOccupant> getOccupant(const Coordinate &position);
 	shared_ptr<CellOccupant> getOccupant(uint32_t x, uint32_t y);
-
 
 	bool isTarget(const Coordinate &position) const override;
 	bool isTarget(uint32_t x, uint32_t y) const override;
@@ -73,7 +71,7 @@ public:
 	 * Returns positions of items in the map
 	 */
 	Coordinate getPlayerPosition() const override;
-	const unordered_map<Coordinate, BoxState> getBoxes() const override;
+//	const unordered_map<Coordinate, BoxState> getBoxes() const;
 	const std::set<Coordinate>& getTargets() const;
 
 	int getNumBoxes() const;

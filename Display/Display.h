@@ -13,34 +13,34 @@ namespace Sokoban {
  * Provides a basic class for displaying a sokoban map.
  */
 class Display {
- protected:
-  /*
-   * Creates a new display object.
-   */
-  Display();
+protected:
+	/*
+	 * Creates a new display object.
+	 */
+	Display();
 
-  bool _valid;
+	bool _valid;
 
- public:
-  /*
-   * Destroys this display instance.
-   */
-  virtual ~Display();
+public:
+	/*
+	 * Destroys this display instance.
+	 */
+	virtual ~Display();
 
-  /*
-   * Sets the underlying map for this display.
-   */
-  virtual void setMap(const Map* map) = 0;
+	/*
+	 * Sets the underlying map for this display.
+	 */
+	virtual void setMap(const IMap *map) = 0;
 
-  /*
-   * Updates the displayed state of this display.
-   */
-  virtual void updateState(const State* state) = 0;
+	/*
+	 * Updates the displayed state of this display.
+	 */
+	virtual void updateState(const IState *state) = 0;
 
-  /*
-   * Retrieves if this display was correctly initialized.
-   */
-  virtual bool isValid() const;
+	/*
+	 * Retrieves if this display was correctly initialized.
+	 */
+	virtual bool isValid() const;
 };
 
 }  // namespace Sokoban

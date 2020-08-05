@@ -4,11 +4,14 @@
 
 namespace Sokoban {
 
-Display::Display() : _valid(false) { }
-Display::~Display() { }
+Display::Display() :
+		_valid(false) {
+}
+Display::~Display() {
+}
 
 bool Display::isValid() const {
-  return _valid;
+	return _valid;
 }
 
 }  // namespace Sokoban

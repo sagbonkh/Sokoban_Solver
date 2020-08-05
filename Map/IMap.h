@@ -12,40 +12,40 @@ namespace Sokoban {
  * Stores the initial state and the fixed blocks of the map.
  */
 class IMap {
- protected:
+protected:
 
-  const uint32_t _width;
-  const uint32_t _height;
+	const uint32_t _width;
+	const uint32_t _height;
 
- public:
-  /*
-   * Constructs a new map with the given movable and static components.
-   */
+public:
+	/*
+	 * Constructs a new map with the given movable and static components.
+	 */
 	IMap(uint32_t width, uint32_t height);
 
-  /*
-   * Destroys the map with its components.
-   */
+	/*
+	 * Destroys the map with its components.
+	 */
 	virtual ~IMap() = default;
 
-  /*
-   * Returns the initial state of the map.
-   */
+	/*
+	 * Returns the initial state of the map.
+	 */
 	virtual const IState* getInitialState() const = 0;
 
-  /*
-   * Returns the static components of this map.
-   */
+	/*
+	 * Returns the static components of this map.
+	 */
 	virtual const IStaticMap* getMap() const = 0;
 
-  /*
-   * Returns the width of the map.
-   */
+	/*
+	 * Returns the width of the map.
+	 */
 	virtual uint32_t getWidth() const;
 
-  /*
-   * Returns the height of the map.
-   */
+	/*
+	 * Returns the height of the map.
+	 */
 	virtual uint32_t getHeight() const;
 };
 

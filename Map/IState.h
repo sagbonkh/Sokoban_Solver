@@ -16,35 +16,36 @@ namespace Sokoban {
  * the BoxState structure.
  */
 class IState {
- public:
-  /*
-   * Creates a new state.
-   */
+public:
+	/*
+	 * Creates a new state.
+	 */
 	IState() = default;
 
-  /*
-   * Destroys this state and its data.
-   */
+	/*
+	 * Destroys this state and its data.
+	 */
 	virtual ~IState() = default;
 
-  /*
-   * Returns the coordinates of the player.
-   */
+	/*
+	 * Returns the coordinates of the player.
+	 */
 	virtual Coordinate getPlayerPosition() const = 0;
 
-  /*
-   * Sets the coordinates of the player.
-   */
+	/*
+	 * Sets the coordinates of the player.
+	 */
 	virtual void setPlayerPosition(Coordinate playerPosition) = 0;
 
-  /*
-   * Returns the list of boxes and their states.
-   */
-	virtual const std::unordered_map<Coordinate, BoxState> getBoxes() const = 0;
+	/*
+	 * Returns the list of boxes and their states.
+	 */
+	virtual std::unordered_map<Coordinate, BoxState>* getBoxes() = 0;
+	virtual const std::unordered_map<Coordinate, BoxState>* getBoxes() const = 0;
 
-  /*
-   * Creates a copy of this State.
-   */
+	/*
+	 * Creates a copy of this State.
+	 */
 	virtual IState* clone() const = 0;
 };
 

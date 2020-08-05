@@ -6,18 +6,21 @@
 
 namespace Sokoban {
 
-MapEntry::MapEntry(const std::string& name, const std::string& path)
-  : _name(name), _path(path) { }
-MapEntry::MapEntry(const MapEntry& mapEntry)
-  : _name(mapEntry._name), _path(mapEntry._path) { }
-MapEntry::~MapEntry() { }
+MapEntry::MapEntry(const std::string &name, const std::string &path) :
+		_name(name), _path(path) {
+}
+MapEntry::MapEntry(const MapEntry &mapEntry) :
+		_name(mapEntry._name), _path(mapEntry._path) {
+}
+MapEntry::~MapEntry() {
+}
 
 const std::string& MapEntry::getName() const {
-  return _name;
+	return _name;
 }
 
 const std::string& MapEntry::getPath() const {
-  return _path;
+	return _path;
 }
 
 }  // namespace Sokoban

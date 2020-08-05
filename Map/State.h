@@ -19,44 +19,46 @@ namespace Sokoban {
  * the BoxState structure.
  */
 class State: public IState {
- protected:
-  Coordinate _player;
-  std::unordered_map<Coordinate, BoxState> _boxes;
+protected:
+	Coordinate _player;
+	std::unordered_map<Coordinate, BoxState> _boxes;
 
-  /*
-   * Protected constructor for copying.
-   */
-  explicit State(const State* state);
+	/*
+	 * Protected constructor for copying.
+	 */
+	explicit State(const IState *state);
 
- public:
-  /*
-   * Creates a new state.
-   */
-  State();
+public:
+	/*
+	 * Creates a new state.
+	 */
+	State();
+	static State* copyState(const IState *state);
 
-  /*
-   * Destroys this state and its data.
-   */
+	/*
+	 * Destroys this state and its data.
+	 */
 	virtual ~State() = default;
 
-  /*
-   * Returns the coordinates of the player.
-   */
+	/*
+	 * Returns the coordinates of the player.
+	 */
 	Coordinate getPlayerPosition() const override;
 
-  /*
-   * Sets the coordinates of the player.
-   */
+	/*
+	 * Sets the coordinates of the player.
+	 */
 	void setPlayerPosition(Coordinate playerPosition) override;
 
-  /*
-   * Returns the list of boxes and their states.
-   */
-	const std::unordered_map<Coordinate, BoxState> getBoxes() const override;
+	/*
+	 * Returns the list of boxes and their states.
+	 */
+	std::unordered_map<Coordinate, BoxState>* getBoxes() override;
+	const std::unordered_map<Coordinate, BoxState>* getBoxes() const override;
 
-  /*
-   * Creates a copy of this State.
-   */
+	/*
+	 * Creates a copy of this State.
+	 */
 	State* clone() const override;
 };
 

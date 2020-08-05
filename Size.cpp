@@ -4,25 +4,29 @@
 
 namespace Sokoban {
 
-Size::Size() : width(0), height(0) { }
-Size::Size(uint32_t w, uint32_t h) : width(w), height(h) { }
+Size::Size() :
+		width(0), height(0) {
+}
+Size::Size(uint32_t w, uint32_t h) :
+		width(w), height(h) {
+}
 
 uint32_t Size::getWidth() {
-  return width;
+	return width;
 }
 uint32_t Size::getHeight() {
-  return height;
+	return height;
 }
 
 void Size::setWidth(uint32_t w) {
-  this->width = w;
+	this->width = w;
 }
 void Size::setHeight(uint32_t h) {
-  this->height = h;
+	this->height = h;
 }
 
-bool Size::operator==(const Size& other) const {
-  return (other.width == width) && (other.height == height);
+bool Size::operator==(const Size &other) const {
+	return (other.width == width) && (other.height == height);
 }
 
 }  // namespace Sokoban

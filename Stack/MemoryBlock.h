@@ -19,26 +19,26 @@ constexpr const uint32_t MEMORY_BLOCK_SIZE = 512 * 1024;
  * Provides a managed block of memory directly accessible by the stack class.
  */
 class MemoryBlock {
-  FRIEND_TEST(Sokoban::Stack, PushPop);
+	FRIEND_TEST(Sokoban::Stack, PushPop);
 
-  friend class Sokoban::Stack;
+	friend class Sokoban::Stack;
 
- private:
-  SokobanStack::MemoryBlock* _nextBlock;
-  SokobanStack::MemoryBlock* _previousBlock;
+private:
+	SokobanStack::MemoryBlock *_nextBlock;
+	SokobanStack::MemoryBlock *_previousBlock;
 
-  uint8_t* _memory;
+	uint8_t *_memory;
 
- public:
-  /*
-   * Creates a new memory block with a size of MEMORY_BLOCK_SIZE bytes.
-   */
-  MemoryBlock();
+public:
+	/*
+	 * Creates a new memory block with a size of MEMORY_BLOCK_SIZE bytes.
+	 */
+	MemoryBlock();
 
-  /*
-   * Destroys the memory block with its data.
-   */
-  ~MemoryBlock();
+	/*
+	 * Destroys the memory block with its data.
+	 */
+	~MemoryBlock();
 };
 
 }  // namespace SokobanStack

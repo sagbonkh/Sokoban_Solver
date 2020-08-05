@@ -6,21 +6,23 @@
 
 namespace Sokoban {
 
-Parser::Parser() { }
-Parser::~Parser() { }
+Parser::Parser() {
+}
+Parser::~Parser() {
+}
 
 const Map* Parser::readFile(const std::string path) {
-  if (path.empty())
-    return nullptr;
+	if (path.empty())
+		return nullptr;
 
-  FILE* file = fopen(path.c_str(), "r");
-  if (!file)
-    return nullptr;
+	FILE *file = fopen(path.c_str(), "r");
+	if (!file)
+		return nullptr;
 
-  const Map* map = readStream(file);
-  fclose(file);
+	const Map *map = readStream(file);
+	fclose(file);
 
-  return map;
+	return map;
 }
 
 }  // namespace Sokoban

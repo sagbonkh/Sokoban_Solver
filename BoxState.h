@@ -17,17 +17,17 @@ namespace Sokoban {
  * anymore.
  */
 struct BoxState {
-  Coordinate position;
+	Coordinate position;
 
-  /*
-   * The state of these boxes are only used by the solver algorithm to save
-   * computation-time.
-   */
-  bool lockedX;
-  bool lockedY;
+	/*
+	 * The state of these boxes are only used by the solver algorithm to save
+	 * computation-time.
+	 */
+	bool lockedX;
+	bool lockedY;
 
-  bool hardLockedX;
-  bool hardLockedY;
+	bool hardLockedX;
+	bool hardLockedY;
 };
 
 }  // namespace Sokoban

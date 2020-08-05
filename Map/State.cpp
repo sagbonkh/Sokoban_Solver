@@ -1,28 +1,40 @@
 // Copyright Tobias Falelr 2016
 
+#include "IState.h"
 #include "State.h"
 
 namespace Sokoban {
 
-State::State() : _player(0, 0), _boxes() {}
-State::State(const State* state)
-    : _player(state->_player),
-      _boxes(state->_boxes.cbegin(), state->_boxes.cend()) {}
+State::State() :
+		_player(0, 0), _boxes() {
+}
+State::State(const IState *state) :
+		_player(state->getPlayerPosition()), _boxes {
+				state->getBoxes()->cbegin(), state->getBoxes()->cend() } {
+}
 
-const std::unordered_map<Coordinate, BoxState> State::getBoxes() const {
-	return _boxes;
+State* State::copyState(const IState *state) {
+	return new State(state);
+}
+
+const std::unordered_map<Coordinate, BoxState>* State::getBoxes() const {
+	return &_boxes;
+}
+
+std::unordered_map<Coordinate, BoxState>* State::getBoxes() {
+	return &_boxes;
 }
 
 Coordinate State::getPlayerPosition() const {
-  return _player;
+	return _player;
 }
 
 void State::setPlayerPosition(Coordinate position) {
-  _player = position;
+	_player = position;
 }
 
 State* State::clone() const {
-  return new State(this);
+	return new State(this);
 }
 
 }  // namespace Sokoban
