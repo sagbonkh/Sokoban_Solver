@@ -1,29 +1,25 @@
 // Copyright Tobias Faller 2016
 
+#include <cassert>
+
 #include "Coordinate.h"
 #include "Direction.h"
 #include "Map/StaticMap.h"
 
 namespace Sokoban {
 
-Coordinate::Coordinate(uint32_t posX, uint32_t posY) :
+Coordinate::Coordinate(map_unit_t posX, map_unit_t posY) :
 		x(posX), y(posY) {
 }
-Coordinate::Coordinate() :
-		Coordinate(0, 0) {
-}
-Coordinate::~Coordinate() {
-}
-
-void Coordinate::set(uint32_t posX, uint32_t posY) {
+void Coordinate::set(map_unit_t posX, map_unit_t posY) {
 	this->x = posX;
 	this->y = posY;
 }
 
-uint32_t Coordinate::getX() const {
+map_unit_t Coordinate::getX() const {
 	return x;
 }
-uint32_t Coordinate::getY() const {
+map_unit_t Coordinate::getY() const {
 	return y;
 }
 
@@ -36,8 +32,8 @@ bool Coordinate::operator<(const Coordinate &other) const {
 }
 
 Coordinate Coordinate::getAdjacent(Direction dir) const {
-	uint32_t newX = x;
-	uint32_t newY = y;
+	map_unit_t newX = x;
+	map_unit_t newY = y;
 	if (dir == Up) {
 		++newY;
 	} else if (dir == Down) {
@@ -50,6 +46,17 @@ Coordinate Coordinate::getAdjacent(Direction dir) const {
 		throw INDEX_OUT_OF_BOUNDS;
 	}
 	return Coordinate(newX, newY);
+}
+
+Coordinate::Coordinate(const initializer_list<map_unit_t> &values) {
+	assert(values.size() == 2);
+	auto it = values.begin();
+	x = *(it++);
+	y = *(it++);
+}
+
+Coordinate::Coordinate(const tuple<map_unit_t, map_unit_t> &values) {
+	tie(x, y) = values;
 }
 
 }  // namespace Sokoban

@@ -4,30 +4,36 @@
 #define PROJEKT_COORDINATE_H_
 
 #include <stdint.h>
+#include <initializer_list>
+#include <tuple>
 
 #include <functional>
 
 #include "Direction.h"
 
 namespace Sokoban {
-
+typedef uint32_t map_unit_t;
+using std::tuple;
+using std::tie;
+using std::initializer_list;
 /*
- * Defines a coordinate with x and y position of type uint32_t.
+ * Defines a coordinate with x and y position of type map_unit_t.
  */
 struct Coordinate {
-	uint32_t x;
-	uint32_t y;
+	map_unit_t x = 0;
+	map_unit_t y = 0;
 
 	/*
 	 * Creates a new location with position 0x0.
 	 */
-	Coordinate();
+	Coordinate() = default;
 
 	/*
 	 * Creates a new location with provided coordinates.
 	 */
-	Coordinate(uint32_t x, uint32_t y);
-
+	explicit Coordinate(map_unit_t x, map_unit_t y);
+	Coordinate(const initializer_list<map_unit_t> &values);
+	Coordinate(const tuple<map_unit_t, map_unit_t> &values);
 	Coordinate(const Coordinate&) = default;
 
 	/*
@@ -38,17 +44,17 @@ struct Coordinate {
 	/*
 	 * Sets the location of this coordinate object.
 	 */
-	void set(uint32_t x, uint32_t y);
+	void set(map_unit_t x, map_unit_t y);
 
 	/*
 	 * Returns the x coordinate of this object.
 	 */
-	uint32_t getX() const;
+	map_unit_t getX() const;
 
 	/*
 	 * Returns the y coordinate of this object.
 	 */
-	uint32_t getY() const;
+	map_unit_t getY() const;
 
 	Coordinate getAdjacent(Direction dir) const;
 

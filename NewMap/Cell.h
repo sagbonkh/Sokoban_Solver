@@ -10,9 +10,9 @@
 #include <memory>
 
 #include "../Coordinate.h"
-#include "./CellOccupant.h"
-#include "../Map/MapState.h"
+#include "MapState.h"
 #include "../Direction.h"
+#include "CellOccupant.h"
 
 namespace Sokoban {
 using std::shared_ptr;
@@ -48,7 +48,7 @@ public:
 	bool isOccupied() const;
 	virtual bool isUnoccupied() const;
 	virtual bool isTarget() const;
-	virtual bool isBoundary() const;
+	virtual bool isWall() const;
 	virtual bool hasPlayer() const;
 	virtual bool hasBox() const;
 	virtual StaticType getStaticType() const;

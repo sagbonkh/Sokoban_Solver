@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "MapState.h"
+#include "../NewMap/MapState.h"
 
 namespace Sokoban {
 

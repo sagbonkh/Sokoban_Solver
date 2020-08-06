@@ -9,16 +9,18 @@
 #include <set>
 #include <vector>
 #include <memory>
+#include <map>
 #include <unordered_map>
 
 #include "../Coordinate.h"
-#include "Map.h"
-#include "IState.h"
-#include "IStaticMap.h"
-#include "State.h"
+#include "../Map/IState.h"
+#include "../Map/IStaticMap.h"
+#include "../Map/Map.h"
+#include "../Map/State.h"
 
 namespace Sokoban {
 
+using std::map;
 using std::set;
 using std::vector;
 using std::unordered_map;
@@ -32,9 +34,7 @@ class CellOccupant;
 class MapState: protected IMap, protected IState, public IStaticMap {
 	Coordinate player;
 	const uint32_t &_height, &_width;
-	// TODO: integrate targets into Cell class
-	const std::set<Coordinate> _targets;
-	vector<vector<shared_ptr<Cell>>> cells;
+	map<Coordinate, shared_ptr<Cell>> cells, initialCells;
 
 	void setPlayerPosition(Coordinate playerPosition) override;
 

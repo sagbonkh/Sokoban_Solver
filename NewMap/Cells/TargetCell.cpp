@@ -4,9 +4,10 @@
  *  Created on: Aug. 5, 2020
  *      Author: sidney
  */
+#include "Cells/TargetCell.h"
+
 #include <memory>
 
-#include "TargetCell.h"
 
 namespace Sokoban {
 

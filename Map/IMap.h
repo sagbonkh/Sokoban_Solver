@@ -2,9 +2,8 @@
 
 #pragma once
 
-#include "IMap.h"
-#include "IState.h"
-#include "IStaticMap.h"
+#include "../Map/IState.h"
+#include "../Map/IStaticMap.h"
 
 namespace Sokoban {
 
@@ -14,14 +13,14 @@ namespace Sokoban {
 class IMap {
 protected:
 
-	const uint32_t _width;
-	const uint32_t _height;
+	const map_unit_t _width;
+	const map_unit_t _height;
 
 public:
 	/*
 	 * Constructs a new map with the given movable and static components.
 	 */
-	IMap(uint32_t width, uint32_t height);
+	IMap(map_unit_t width, map_unit_t height);
 
 	/*
 	 * Destroys the map with its components.
@@ -41,23 +40,23 @@ public:
 	/*
 	 * Returns the width of the map.
 	 */
-	virtual uint32_t getWidth() const;
+	virtual map_unit_t getWidth() const;
 
 	/*
 	 * Returns the height of the map.
 	 */
-	virtual uint32_t getHeight() const;
+	virtual map_unit_t getHeight() const;
 };
 
-inline IMap::IMap(uint32_t width, uint32_t height) :
+inline IMap::IMap(map_unit_t width, map_unit_t height) :
 		_width(width), _height(height) {
 }
 
-inline uint32_t IMap::getWidth() const {
+inline map_unit_t IMap::getWidth() const {
 	return _width;
 }
 
-inline uint32_t IMap::getHeight() const {
+inline map_unit_t IMap::getHeight() const {
 	return _height;
 }
 

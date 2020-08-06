@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "Cell.h"
+#include "../NewMap/Cell.h"
 
 namespace Sokoban {
 
@@ -121,7 +121,7 @@ Cell::operator StaticType() const {
 	return getStaticType();
 }
 
-bool Cell::isBoundary() const {
+bool Cell::isWall() const {
 	return false;
 }
 

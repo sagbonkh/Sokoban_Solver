@@ -22,7 +22,7 @@ enum StaticType {
 /*
  * Defines a index out of bounds error.
  */
-constexpr const uint32_t INDEX_OUT_OF_BOUNDS = 0xE1;
+constexpr const map_unit_t INDEX_OUT_OF_BOUNDS = 0xE1;
 
 /*
  * Defines the static contents of the current map.
@@ -58,7 +58,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual StaticType get(uint32_t x, uint32_t y) const = 0;
+	virtual StaticType get(map_unit_t x, map_unit_t y) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a block.
@@ -72,7 +72,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isBlock(uint32_t x, uint32_t y) const = 0;
+	virtual bool isBlock(map_unit_t x, map_unit_t y) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a target for a block.
@@ -86,7 +86,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isTarget(uint32_t x, uint32_t y) const = 0;
+	virtual bool isTarget(map_unit_t x, map_unit_t y) const = 0;
 
 	/*
 	 * Checks if the field at the provided position is a empty.
@@ -100,7 +100,7 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual bool isEmpty(uint32_t x, uint32_t y) const = 0;
+	virtual bool isEmpty(map_unit_t x, map_unit_t y) const = 0;
 
 	/*
 	 * Sets the field at the provided position to a specified type.
@@ -116,17 +116,17 @@ public:
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is
 	 * thrown.
 	 */
-	virtual void set(uint32_t x, uint32_t y, StaticType type) = 0;
+	virtual void set(map_unit_t x, map_unit_t y, StaticType type) = 0;
 
 	/*
 	 * Returns the width of the map.
 	 */
-	virtual uint32_t getWidth() const = 0;
+	virtual map_unit_t getWidth() const = 0;
 
 	/*
 	 * Returns the height of the map.
 	 */
-	virtual uint32_t getHeight() const = 0;
+	virtual map_unit_t getHeight() const = 0;
 
 	/*
 	 * Clones this StaticMap.

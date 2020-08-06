@@ -5,28 +5,28 @@
  *      Author: sidney
  */
 
-#include "BoundaryCell.h"
+#include "WallCell.h"
 
 namespace Sokoban {
 
-BoundaryCell::BoundaryCell(shared_ptr<MapState> mapState, uint32_t posX,
+WallCell::WallCell(shared_ptr<MapState> mapState, uint32_t posX,
 		uint32_t posY) :
 		Cell(mapState, posX, posY) {
 }
-BoundaryCell::BoundaryCell(shared_ptr<MapState> mapState,
+WallCell::WallCell(shared_ptr<MapState> mapState,
 		const Coordinate &coordinate) :
 		Cell(mapState, coordinate) {
 }
 
-bool BoundaryCell::canBeOccupied() const {
+bool WallCell::canBeOccupied() const {
 	return false;
 }
 
-bool BoundaryCell::isBoundary() const {
+bool WallCell::isWall() const {
 	return true;
 }
 
-StaticType BoundaryCell::getStaticType() const {
+StaticType WallCell::getStaticType() const {
 	return StaticType::Block;
 }
 

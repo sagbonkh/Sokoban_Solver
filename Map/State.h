@@ -7,9 +7,9 @@
 
 #include <unordered_map>
 
-#include "./IState.h"
 #include "../BoxState.h"
 #include "../Coordinate.h"
+#include "IState.h"
 
 namespace Sokoban {
 

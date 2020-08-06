@@ -8,13 +8,10 @@
 
 #include <string>
 
-#include "MapEntry.h"
-#include "LevelSelector.h"
-
 #include "GameLogic.h"
 
 #include "../Display/ColoredDisplay.h"
-#include "../Display/HighscoreDisplay.h"
+#include "GameLevel.h"
 
 namespace Sokoban {
 
@@ -26,7 +23,7 @@ constexpr const uint32_t GAME_WIDTH = 30;
 constexpr const uint32_t GAME_HEIGHT = 15;
 
 enum State : uint32_t {
-	Invalid, LevelSelect, Play, Highscore
+	Invalid, Play
 };
 
 }  // namespace SokobanGame
@@ -38,15 +35,14 @@ enum State : uint32_t {
  */
 class Game {
 private:
-	std::string _directory;
 	SokobanGame::State _state;
+	// TODO: change this
+	std::string _directory;
 
 	WINDOW *_window;
-	LevelSelector *_levelSelector;
 	ColoredDisplay *_display;
-	HighscoreDisplay *_highscoreDisplay;
 
-	const MapEntry *_mapEntry;
+	const GameLevel _gameLevel;
 	GameLogic _gameLogic;
 
 	bool _quit;
@@ -62,10 +58,9 @@ private:
 	void destroyDisplay();
 
 	/*
-	 * Gets called if a level was selected via LevelSelector.
+	 * Changes level of a game.
 	 */
-	void onLevelSelected(const MapEntry &level, const IMap *map,
-			bool highscore);
+	void changeLevel(const GameLevel &level, const IMap *map);
 
 	/*
 	 * Handles user input

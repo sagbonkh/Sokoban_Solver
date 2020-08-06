@@ -1,7 +1,7 @@
 // Copyright Tobias Falelr 2016
 
-#include "IState.h"
 #include "State.h"
+#include "IState.h"
 
 namespace Sokoban {
 

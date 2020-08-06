@@ -7,6 +7,16 @@
             			
             <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.base.148444267" moduleId="org.eclipse.cdt.core.settings" name="Default">
                 				
+                <macros>
+                    					
+                    <stringMacro name="FLAGS" type="VALUE_TEXT" value="-std=c++2a"/>
+                    					
+                    <stringMacro name="CPPFLAGS" type="VALUE_TEXT" value="-std=c++2a"/>
+                    					
+                    <stringMacro name="CXXFLAGS" type="VALUE_TEXT" value="-std=c++2a"/>
+                    				
+                </macros>
+                				
                 <externalSettings/>
                 				
                 <extensions>

@@ -8,9 +8,9 @@
 #pragma once
 #include <memory>
 
-#include "Cell.h"
 #include "../Direction.h"
-#include "../Map/MapState.h"
+#include "Cell.h"
+#include "MapState.h"
 
 namespace Sokoban {
 

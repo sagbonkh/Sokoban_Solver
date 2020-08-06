@@ -10,8 +10,8 @@
 #include <memory>
 
 #include "../Coordinate.h"
-#include "../Map/MapState.h"
-#include "Cell.h"
+#include "../NewMap/Cell.h"
+#include "../NewMap/MapState.h"
 
 namespace Sokoban {
 using std::enable_shared_from_this;
