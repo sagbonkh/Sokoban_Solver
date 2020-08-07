@@ -76,15 +76,24 @@ bool Cell::canPushOccupantIn(Direction dir) {
 
 }
 
-// to be called from the cell next to the player (in the direction they are moving)
+// to be called from the cell a player wishes to move to (which may contain a box)
 // tries to move any box on this cell, to the next cell in the same direction
-void Cell::pushOccupantIn(Direction dir) {
-	// if we can't push our occpant, throw an error
+Cell::move_result_t Cell::pushOccupantIn(Direction dir) {
+	// if we have no occupant, return successful, but note nothing moved
+	if (isUnoccupied())
+		return make_tuple<bool, bool, bool>(true, false, false);
+	// if we can't push our occupant, return unsuccessful
 	if (!canPushOccupantIn(dir))
-		throw "Cannot push cell's occupant in the given direction";
+		return make_tuple<bool, bool, bool>(false, false, false);
+
+	if (getOccupant()->getType() != CellOccupantType::Box) {
+		throw "Invalid move. This function is only meant for boxes.";
+	}
+
 	// get adjacent cell (in direction specified)
 	shared_ptr<Cell> adjCell = getAdjacent(dir);
 	moveOccupantTo(adjCell);
+	return make_tuple<bool, bool, bool>(true, true, false);
 }
 
 bool Cell::canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant) {
@@ -95,12 +104,25 @@ bool Cell::canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant) {
 
 // when player tries to enter this cell, this is called with the the player's CellOccpant
 // and the direction from which the player is entering
-void Cell::enterFrom(Direction dir, shared_ptr<CellOccupant> occupant) {
+Cell::move_result_t Cell::enterFrom(Direction dir,
+		shared_ptr<CellOccupant> occupant) {
+	if (occupant->getType() != CellOccupantType::Player)
+		throw "Invalid move. This function is only meant for the player.";
+
+	// if this cell can't be entered (either because it can't be occupied or because the occupant can't be displaced
+	// indicate failure
 	if (!canEnterFrom(dir, occupant))
-		throw "Cannot enter this cell from the given direction";
-	// we were able to push our occupant, so we will accept our new one
+		return make_tuple<bool, bool, bool>(false, false, false);
+
+	shared_ptr<Cell> adjCell = getAdjacent(dir);
+	move_result_t push_result = adjCell->pushOccupantIn(dir);
+	// if not successful somehow, abort
+	if (!get<0>(push_result))
+		return make_tuple<bool, bool, bool>(false, false, false);
+
 	shared_ptr<Cell> prevCell = occupant->getCell();
 	prevCell->moveOccupantTo(getptr());
+	return make_tuple<bool, bool, bool>(true, get<1>(push_result), true);
 }
 
 // if the cell has no occupant

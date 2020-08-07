@@ -8,367 +8,73 @@
 
 #include "../Coordinate.h"
 
-#include "../Map/Map.h"
-#include "../Map/State.h"
-#include "../Map/StaticMap.h"
+#include "../NewMap/MapState.h"
+#include "../NewMap/Cell.h"
+#include "../NewMap/Occupants/Player.h"
 
 #include "../Stack/Stack.h"
 #include "../Stack/StackFrame.h"
 
+using Sokoban::SokobanGameLogic::Command;
 namespace Sokoban {
 
-GameLogic::GameLogic() :
-		_startTime(), _endTime(), _finished(false), _steps(0), _undoUsage(0), _undoCount(
-				0) {
+const map<Command, Direction> GameLogic::CommandDirections
+	{
+		{ Command::Up, Direction::Up },
+		{ Command::Down, Direction::Down },
+		{ Command::Left, Direction::Left },
+		{ Command::Right, Direction::Right } };
+
+GameLogic::GameLogic() : _startTime(), _endTime(), _finished(false), _steps(0), _undoUsage(0), _undoCount(0) {
 	_map = nullptr;
-	_state = nullptr;
-}
-GameLogic::~GameLogic() {
-	if (_state)
-		delete _state;
 }
 
-void GameLogic::reset(const IMap *map) {
-	if (_state)
-		delete _state;
-
-	// Copy state to make it mutable
-	// (use _map, porb. future: smartpointer?)
-	_state = State::copyState(map->getInitialState());
-	_map = map->getMap();
-
+void GameLogic::reset(const shared_ptr<const GameLevel> &level) {
+	_map = make_shared<MapState>(level->getMap());
 	_steps = 0;
 	_finished = false;
 	clock_gettime(CLOCK_MONOTONIC, &_startTime);
 }
 
 bool GameLogic::update(SokobanGameLogic::Command command) {
-	if (_finished)
-		return false;
+	if (_finished) return false;
 
-	std::unordered_map<Coordinate, BoxState> *boxes = _state->getBoxes();
-	Coordinate playerPos = Coordinate(_state->getPlayerPosition());
+	if (command == SokobanGameLogic::Command::Undo) {
+		return undo();
+	}
+	if (!CommandDirections.contains(command)) return false;
+	shared_ptr<Player> player = _map->getPlayer();
 
+	// this means the command was to move the player in a direction
 	StackFrame frame;
 
-	switch (command) {
-	case SokobanGameLogic::Command::Up: {
-		frame.setDirection(Direction::Up);
+	Direction dir = CommandDirections[command];
+	Cell::move_result_t move_result = player->moveIn(dir);
+	bool box_moved = get<2>(move_result);
+	++_steps;
+	if (box_moved) checkFinished();
+	frame.setMoveBox(box_moved);
+	frame.setDirection(dir);
+	_stack.push(frame);
+	if (_undoUsage > 0) _undoUsage--;
+	return true;
 
-		// Walk agains border
-		if (playerPos.y < 1)
-			break;
-
-		// Walk against wall
-		if (_map->isBlock(playerPos.x, playerPos.y - 1))
-			break;
-
-		// Push box
-		if (boxes->count(Coordinate(playerPos.x, playerPos.y - 1)) > 0) {
-			// Push box against border
-			if (playerPos.y < 2)
-				break;
-
-			// Push box against wall
-			if (_map->isBlock(playerPos.x, playerPos.y - 2))
-				break;
-
-			// Push box against box
-			if (boxes->count(Coordinate(playerPos.x, playerPos.y - 2)) > 0)
-				break;
-
-			for (;;) {
-				std::unordered_map<Coordinate, BoxState>::iterator it =
-						boxes->find(Coordinate(playerPos.x, playerPos.y - 1));
-				if (it == boxes->end())
-					break;
-
-				Coordinate newBoxPosition = Coordinate(it->first);
-				BoxState newBoxState = BoxState(it->second);
-
-				// remove box from map
-				boxes->erase(it->first);
-
-				newBoxPosition.y--;
-				newBoxState.position.y--;
-
-				// re-insert with new index
-				boxes->insert(
-						std::pair<Coordinate, BoxState>(newBoxPosition,
-								newBoxState));
-			}
-
-			frame.setMoveBox(true);
-
-			// Check if box was moved onto target
-			if (boxes->count(Coordinate(playerPos.x, playerPos.y - 2)) > 0
-					&& _map->isTarget(playerPos.x, playerPos.y - 2)
-					&& checkFinished())
-				_finished = true;
-		}  // end push box
-
-		// move player
-		_state->setPlayerPosition(Coordinate(playerPos.x, playerPos.y - 1));
-		_steps++;
-
-		_stack.push(frame);
-		if (_undoUsage > 0) {
-			_undoUsage--;
-		}
-		return true;
-	}  // end case Up
-	case SokobanGameLogic::Command::Down: {
-		frame.setDirection(Direction::Down);
-
-		// Walk agains border
-		if (playerPos.y + 1 >= _map->getHeight())
-			break;
-
-		// Walk against wall
-		if (_map->isBlock(playerPos.x, playerPos.y + 1))
-			break;
-
-		// Push box
-		if (boxes->count(Coordinate(playerPos.x, playerPos.y + 1)) > 0) {
-			// Push box against border
-			if (playerPos.y + 2 >= _map->getHeight())
-				break;
-
-			// Push box against wall
-			if (_map->isBlock(playerPos.x, playerPos.y + 2))
-				break;
-
-			// Push box against box
-			if (boxes->count(Coordinate(playerPos.x, playerPos.y + 2)) > 0)
-				break;
-
-			for (;;) {
-				std::unordered_map<Coordinate, BoxState>::iterator it =
-						boxes->find(Coordinate(playerPos.x, playerPos.y + 1));
-				if (it == boxes->end())
-					break;
-
-				Coordinate newBoxPosition = Coordinate(it->first);
-				BoxState newBoxState = BoxState(it->second);
-
-				// remove box from map
-				boxes->erase(it->first);
-
-				newBoxPosition.y++;
-				newBoxState.position.y++;
-
-				// re-insert with new index
-				boxes->insert(
-						std::pair<Coordinate, BoxState>(newBoxPosition,
-								newBoxState));
-			}
-
-			frame.setMoveBox(true);
-
-			// Check if box was moved onto target
-			if (boxes->count(Coordinate(playerPos.x, playerPos.y + 2)) > 0
-					&& _map->isTarget(playerPos.x, playerPos.y + 2)
-					&& checkFinished())
-				_finished = true;
-		}  // end push box
-
-		// move player
-		_state->setPlayerPosition(Coordinate(playerPos.x, playerPos.y + 1));
-		_steps++;
-
-		_stack.push(frame);
-		if (_undoUsage > 0) {
-			_undoUsage--;
-		}
-		return true;
-	}  // end case Down
-	case SokobanGameLogic::Command::Left: {
-		frame.setDirection(Direction::Left);
-
-		// Walk agains border
-		if (playerPos.x < 1)
-			break;
-
-		// Walk against wall
-		if (_map->isBlock(playerPos.x - 1, playerPos.y))
-			break;
-
-		// Push box
-		if (boxes->count(Coordinate(playerPos.x - 1, playerPos.y)) > 0) {
-			// Push box against border
-			if (playerPos.x < 2)
-				break;
-
-			// Push box against wall
-			if (_map->isBlock(playerPos.x - 2, playerPos.y))
-				break;
-
-			// Push box against box
-			if (boxes->count(Coordinate(playerPos.x - 2, playerPos.y)) > 0)
-				break;
-
-			for (;;) {
-				std::unordered_map<Coordinate, BoxState>::iterator it =
-						boxes->find(Coordinate(playerPos.x - 1, playerPos.y));
-				if (it == boxes->end())
-					break;
-
-				Coordinate newBoxPosition = Coordinate(it->first);
-				BoxState newBoxState = BoxState(it->second);
-
-				// remove box from map
-				boxes->erase(it->first);
-
-				newBoxPosition.x--;
-				newBoxState.position.x--;
-
-				// re-insert with new index
-				boxes->insert(
-						std::pair<Coordinate, BoxState>(newBoxPosition,
-								newBoxState));
-			}
-
-			frame.setMoveBox(true);
-
-			// Check if box was moved onto target
-			if (boxes->count(Coordinate(playerPos.x - 2, playerPos.y)) > 0
-					&& _map->isTarget(playerPos.x - 2, playerPos.y)
-					&& checkFinished())
-				_finished = true;
-		}  // end push box
-
-		// move player
-		_state->setPlayerPosition(Coordinate(playerPos.x - 1, playerPos.y));
-		_steps++;
-
-		_stack.push(frame);
-		if (_undoUsage > 0) {
-			_undoUsage--;
-		}
-		return true;
-	}  // end case Left
-	case SokobanGameLogic::Command::Right: {
-		frame.setDirection(Direction::Right);
-
-		// Walk agains border
-		if (playerPos.x + 1 >= _map->getWidth())
-			break;
-
-		// Walk against wall
-		if (_map->isBlock(playerPos.x + 1, playerPos.y))
-			break;
-
-		// Push box
-		if (boxes->count(Coordinate(playerPos.x + 1, playerPos.y)) > 0) {
-			// Push box against border
-			if (playerPos.x + 2 >= _map->getWidth())
-				break;
-
-			// Push box against wall
-			if (_map->isBlock(playerPos.x + 2, playerPos.y))
-				break;
-
-			// Push box against box
-			if (boxes->count(Coordinate(playerPos.x + 2, playerPos.y)) > 0)
-				break;
-
-			for (;;) {
-				std::unordered_map<Coordinate, BoxState>::iterator it =
-						boxes->find(Coordinate(playerPos.x + 1, playerPos.y));
-				if (it == boxes->end())
-					break;
-
-				Coordinate newBoxPosition = Coordinate(it->first);
-				BoxState newBoxState = BoxState(it->second);
-
-				// remove box from map
-				boxes->erase(it->first);
-
-				newBoxPosition.x++;
-				newBoxState.position.x++;
-
-				// re-insert with new index
-				boxes->insert(
-						std::pair<Coordinate, BoxState>(newBoxPosition,
-								newBoxState));
-			}
-
-			frame.setMoveBox(true);
-
-			// Check if box was moved onto target
-			if (boxes->count(Coordinate(playerPos.x + 2, playerPos.y)) > 0
-					&& _map->isTarget(playerPos.x + 2, playerPos.y))
-				checkFinished();
-		}  // end push box
-
-		// move player
-		_state->setPlayerPosition(Coordinate(playerPos.x + 1, playerPos.y));
-		_steps++;
-
-		_stack.push(frame);
-		if (_undoUsage > 0) {
-			_undoUsage--;
-		}
-		return true;
-	}  // end case Right
-	case SokobanGameLogic::Command::Undo:
-		if ((_undoUsage >= _undoCount) || _stack.isEmpty())
-			return false;
-
-		_undoUsage++;
-		_stack.pop(&frame);
-
-		int32_t modX = 0;
-		int32_t modY = 0;
-
-		switch (frame.getDirection()) {
-		case Direction::Up:
-			modY = 1;
-			break;
-		case Direction::Down:
-			modY = -1;
-			break;
-		case Direction::Left:
-			modX = 1;
-			break;
-		case Direction::Right:
-			modX = -1;
-			break;
-		}
-
-		_state->setPlayerPosition(
-				Coordinate(playerPos.x + modX, playerPos.y + modY));
-
-		if (frame.isMoveBox()) {
-			for (;;) {
-				std::unordered_map<Coordinate, BoxState>::iterator it =
-						boxes->find(
-								Coordinate(playerPos.x - modX,
-										playerPos.y - modY));
-				if (it == boxes->end())
-					break;
-
-				BoxState newBoxState = BoxState(it->second);
-
-				// remove box from map
-				boxes->erase(it->first);
-
-				newBoxState.position = Coordinate(playerPos);
-
-				// re-insert with new index
-				boxes->insert(
-						std::pair<Coordinate, BoxState>(playerPos,
-								newBoxState));
-			}
-		}
-		return true;
-	}
-
-	return false;
 }
 
-const IState* GameLogic::getState() const {
-	return _state;
+bool GameLogic::undo() {
+
+	if ((_undoUsage >= _undoCount) || _stack.isEmpty()) return false;
+	StackFrame frame;
+
+	_undoUsage++;
+	_stack.pop(&frame);
+
+	int32_t modX = 0;
+	int32_t modY = 0;
+
+	shared_ptr<Player> player = _map->getPlayer();
+	player->reverseMoveIn(frame.getDirection(), frame.isMoveBox());
+	return true;
 }
 
 bool GameLogic::isFinished() const {
@@ -376,21 +82,8 @@ bool GameLogic::isFinished() const {
 }
 
 bool GameLogic::checkFinished() {
-	const std::unordered_map<Coordinate, BoxState> *boxes = _state->getBoxes();
+	if (!_map->isWon()) return false;
 
-	// Check if all targets have a box on top
-	std::set<Coordinate>::const_iterator it = _map->getTargets().cbegin();
-	const std::set<Coordinate>::const_iterator end = _map->getTargets().cend();
-
-	while (it != end) {
-		if (boxes->count(*it) == 0)
-			return false;
-
-		++it;
-	}
-
-	// All coordinates iterated an no return
-	// -> Each target has a box
 	clock_gettime(CLOCK_MONOTONIC, &_endTime);
 	_finished = true;
 	return true;

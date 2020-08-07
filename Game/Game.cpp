@@ -24,7 +24,6 @@ Game::Game(const std::string &directory) {
 	_quit = false;
 	_directory = directory;
 
-
 	if (initDisplay() != 0) {
 		_state = SokobanGame::State::Invalid;
 		return;
@@ -37,25 +36,21 @@ Game::Game(const std::string &directory) {
 	}
 
 	_display->setEnabled(false);
-	_display->setRectangle(
-			Rectangle(0, 3, SokobanGame::GAME_WIDTH, SokobanGame::GAME_HEIGHT));
+	_display->setRectangle(Rectangle(0, 3, SokobanGame::GAME_WIDTH, SokobanGame::GAME_HEIGHT));
 
 	_gameLogic.setUndoCount(5);
 }
 
 Game::~Game() {
-	if (_display)
-		delete _display;
+	if (_display) delete _display;
 
-	if (_gameLevel)
-		delete _gameLevel;
+	if (_gameLevel) delete _gameLevel;
 
 	destroyDisplay();
 }
 
 void Game::play() {
-	if (_state == SokobanGame::State::Invalid)
-		return;
+	if (_state == SokobanGame::State::Invalid) return;
 
 	while (!_quit) {
 		if (!handleKey()) {
@@ -106,37 +101,53 @@ bool Game::handleKey() {
 	int key = getch();
 
 	switch (key) {
-	case KEY_CLOSE:  // Quit / Close
-	case 'm':  // Menu
-	case 'q':  // Quit to menu
+		case KEY_CLOSE:  // Quit / Close
+		case 'm':  // Menu
+		case 'q':  // Quit to menu
+			_display->setEnabled(false);
+			return false;
+		case KEY_UP:
+			if (_gameLogic.update(SokobanGameLogic::Command::Up)) _display->updateState(_gameLogic.getState());
+			break;
+		case KEY_DOWN:
+			if (_gameLogic.update(SokobanGameLogic::Command::Down)) _display->updateState(_gameLogic.getState());
+			break;
+		case KEY_LEFT:
+			if (_gameLogic.update(SokobanGameLogic::Command::Left)) _display->updateState(_gameLogic.getState());
+			break;
+		case KEY_RIGHT:
+			if (_gameLogic.update(SokobanGameLogic::Command::Right)) _display->updateState(_gameLogic.getState());
+			break;
+		case 'U':  // undo
+		case 'u':
+			if (_gameLogic.update(SokobanGameLogic::Command::Undo)) _display->updateState(_gameLogic.getState());
+			break;
+		case 'R':  // reset
+		case 'r':
+			_gameLogic.reset(_display->getMap());
+			break;
+		default:
+			break;
+	}
+
+	if (_gameLogic.isFinished()) {
+		_highscoreDisplay->setMap(_mapEntry->getPath());
+		_highscoreDisplay->load();
+
+		HighscoreEntry entry;
+		entry.steps = _gameLogic.getSteps();
+		entry.time = _gameLogic.getTime();
+		entry.name = std::string();
+		_highscoreDisplay->setNewScore(entry);
+
 		_display->setEnabled(false);
-		return false;
-	case KEY_UP:
-		if (_gameLogic.update(SokobanGameLogic::Command::Up))
-			_display->updateState(_gameLogic.getState());
-		break;
-	case KEY_DOWN:
-		if (_gameLogic.update(SokobanGameLogic::Command::Down))
-			_display->updateState(_gameLogic.getState());
-		break;
-	case KEY_LEFT:
-		if (_gameLogic.update(SokobanGameLogic::Command::Left))
-			_display->updateState(_gameLogic.getState());
-		break;
-	case KEY_RIGHT:
-		if (_gameLogic.update(SokobanGameLogic::Command::Right))
-			_display->updateState(_gameLogic.getState());
-		break;
-	case 'U':  // undo
-	case 'u':
-		if (_gameLogic.update(SokobanGameLogic::Command::Undo))
-			_display->updateState(_gameLogic.getState());
-		break;
-	case 'R':  // reset
-	case 'r':
-		_gameLogic.reset(_display->getMap());
-		break;
-	default:
+		_highscoreDisplay->setEnabled(true);
+
+		werase(_window);
+		_highscoreDisplay->update();
+		wrefresh(_window);
+
+		_state = SokobanGame::State::Highscore;
 		break;
 	}
 

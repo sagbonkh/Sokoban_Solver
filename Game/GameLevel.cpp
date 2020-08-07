@@ -28,9 +28,13 @@ GameLevel::GameLevel(istream &in) {
 }
 
 void GameLevel::load(istream &in) const {
-	if (_map)
+	if (!_map)
 		return;
-	_map = Parser::readStream(&in);
+
+	Parser::parse_result_t result = Parser::readStream(&in);
+	_name = result.first;
+	_map = result.second;
+
 }
 
 void GameLevel::load() const {
@@ -47,13 +51,12 @@ void GameLevel::load() const {
 		throw "Level could not be read from path "s + _path + " at position "s
 				+ to_string(_pos);
 	}
-	//TODO: call parser
 }
 
 const std::string& GameLevel::getName() const {
 	if (!_map)
 		load();
-	return _map->getName();
+	return _name;
 
 }
 

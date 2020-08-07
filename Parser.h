@@ -43,15 +43,16 @@ class Parser {
 	static Parser& get();
 	static mutex parser_in_use_mtx;
 public:
+	typedef pair<string, shared_ptr<const MapGrid::initial_map_t>> parse_result_t;
 	/*
 	 * Destroys this parser.
 	 */
 	~Parser() = default;
 
-	static shared_ptr<const IMap> readStream(FILE *stream);
-	static shared_ptr<const IMap> readStream(std::istream *stream);
-	static shared_ptr<const IMap> readData(const std::string data);
-	static shared_ptr<const IMap> readFile(const std::string path);
+	static parse_result_t readStream(FILE *stream);
+	static parse_result_t readStream(std::istream *stream);
+	static parse_result_t readData(const std::string data);
+	static parse_result_t readFile(const std::string path);
 
 private:
 	MapBuilder _mapBuilder;
@@ -59,17 +60,17 @@ private:
 	/*
 	 * Reads a file stream and interprets it as sokoban level.
 	 */
-	shared_ptr<const IMap> _readStream(FILE *stream);
+	parse_result_t _readStream(FILE *stream);
 
 	/*
 	 * Reads a stream and interprets it as sokoban level.
 	 */
-	shared_ptr<const IMap> _readStream(std::istream *stream);
+	parse_result_t _readStream(std::istream *stream);
 
 	/*
 	 * Reads some data and interprets it as sokoban level.
 	 */
-	shared_ptr<const IMap> _readData(const std::string data);
+	parse_result_t _readData(const std::string data);
 
 
 	/*

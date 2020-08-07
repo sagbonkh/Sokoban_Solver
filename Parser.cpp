@@ -15,58 +15,45 @@ using std::make_shared;
 
 mutex Parser::parser_in_use_mtx;
 
-
-shared_ptr<const IMap> Parser::readFile(const std::string path) {
+Parser::parse_result_t Parser::readFile(const std::string path) {
 	if (path.empty())
-		return nullptr;
+		return parse_result_t("", nullptr);
 
 	FILE *file = fopen(path.c_str(), "r");
 	if (!file)
-		return nullptr;
+		return parse_result_t("", nullptr);
 
-	const IMap *map = readStream(file);
+	Parser::parse_result_t result = readStream(file);
 	fclose(file);
 
-	return map;
+	return result;
 }
 
 shared_ptr<Parser> Parser::_singleton = nullptr;
 
 Parser& Parser::get() {
 	if (!_singleton) {
-		_singleton = make_shared<Parser>();
+		_singleton = shared_ptr<Parser>(new Parser());
 	}
 	return *_singleton;
 }
 
-shared_ptr<const IMap> Parser::readStream(FILE *stream) {
+Parser::parse_result_t Parser::readStream(FILE *stream) {
 	lock_guard<mutex> guard(parser_in_use_mtx);
 	return get()._readStream(stream);
 }
 
-shared_ptr<const IMap> Parser::readStream(std::istream *stream) {
+Parser::parse_result_t Parser::readStream(std::istream *stream) {
 	lock_guard<mutex> guard(parser_in_use_mtx);
 	return get()._readStream(stream);
 }
 
-shared_ptr<const IMap> Parser::readData(const std::string data) {
+Parser::parse_result_t Parser::readData(const std::string data) {
 	lock_guard<mutex> guard(parser_in_use_mtx);
 	return get()._readData(data);
 }
 
-shared_ptr<const IMap> Parser::readFile(const std::string path) {
-	if (path.empty())
-		return nullptr;
 
-	FILE *file = fopen(path.c_str(), "r");
-	if (!file)
-		return nullptr;
-
-	const Map *map = readStream(file);
-	fclose(file);
-
-	return map;
-}
 
 uint32_t Parser::tokenizeData(const std::string &data, uint32_t *line) {
 	ssize_t nextTerminator;
@@ -121,7 +108,7 @@ void Parser::addToken(char c, uint32_t x, uint32_t y) {
 	}
 }
 
-shared_ptr<const IMap> Parser::_readData(std::string data) {
+Parser::parse_result_t Parser::_readData(std::string data) {
 	_mapBuilder.reset();
 
 	uint32_t line = 0;
@@ -132,7 +119,7 @@ shared_ptr<const IMap> Parser::_readData(std::string data) {
 	return _mapBuilder.build().second;
 }
 
-shared_ptr<const IMap> Parser::_readStream(FILE *stream) {
+Parser::parse_result_t Parser::_readStream(FILE *stream) {
 	_mapBuilder.reset();
 
 	char *buffer = nullptr;
@@ -159,7 +146,7 @@ shared_ptr<const IMap> Parser::_readStream(FILE *stream) {
 	return _mapBuilder.build().second;
 }
 
-shared_ptr<const IMap> Parser::_readStream(std::istream *stream) {
+Parser::parse_result_t Parser::_readStream(std::istream *stream) {
 	_mapBuilder.reset();
 
 	std::string buffer;
@@ -183,7 +170,10 @@ shared_ptr<const IMap> Parser::_readStream(std::istream *stream) {
 	if ((index + 1) < buffer.length())
 		readLine(buffer.substr(index), line);
 
-	return _mapBuilder.build().second;
+	auto [error, result] = _mapBuilder.build();
+	if (error != SokobanBuilder::Error::Success)
+		throw "Map Builder failed";
+	return result;
 }
 
 ssize_t Parser::getNextTerminator(const std::string &data, uint32_t offset) {
@@ -218,10 +208,8 @@ uint32_t Parser::readLine(std::string line, uint32_t lineNumber) {
 		case '\n':
 			break;
 		case ';':
-			_mapBuilder.setTitle(line.substr(1));
-			// TODO: allow parsing subsequent levels in a file.
-			// For now just return after first level is parsed
-			return index;
+			_mapBuilder.setTitle(line.substr(index + 1));
+			break;
 
 		default:
 			addToken(c, index, lineNumber);

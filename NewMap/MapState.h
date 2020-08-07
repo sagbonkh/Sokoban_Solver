@@ -13,21 +13,19 @@
 #include <unordered_map>
 
 #include "../Coordinate.h"
-#include "../Map/IState.h"
-#include "../Map/IStaticMap.h"
-#include "../Map/Map.h"
-#include "../Map/State.h"
 #include "MapGrid.h"
-
-namespace Sokoban {
 
 using std::map;
 using std::set;
 using std::vector;
 using std::unordered_map;
 using std::shared_ptr;
+namespace Sokoban {
+
 class Cell;
 class CellOccupant;
+class Player;
+
 
 
 
@@ -39,12 +37,9 @@ class MapState {
 	const uint32_t &_height, &_width;
 	shared_ptr<MapGrid> _mapGrid;
 
-	void setPlayerPosition(Coordinate playerPosition);
-
 public:
 	MapState() = delete;
-	MapState(const Map &map);
-	MapState(const Map &map, const State &state);
+	MapState(const shared_ptr<const MapGrid::initial_map_t> &map);
 	MapState(const MapState &other) = default;
 	virtual ~MapState() = default;
 
@@ -73,7 +68,7 @@ public:
 	/*
 	 * Returns positions of items in the map
 	 */
-	Coordinate getPlayerPosition() const;
+	const shared_ptr<Player>& getPlayer();
 
 //	const unordered_map<Coordinate, BoxState> getBoxes() const;
 //	const std::set<Coordinate>& getTargets() const;

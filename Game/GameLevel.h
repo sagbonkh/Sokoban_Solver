@@ -26,6 +26,7 @@ private:
 	std::string _path;
 	pos_type _pos;
 
+	mutable string _name = "";
 	mutable shared_ptr<const MapGrid::initial_map_t> _map = nullptr;
 
 	void load(istream &in) const;

@@ -1,16 +1,17 @@
 // Copyright Tobias Faller 2016
 
-#ifndef PROJEKT_GAME_GAMELOGIC_H_
-#define PROJEKT_GAME_GAMELOGIC_H_
-
+#pragma once
 #include <stdint.h>
+#include <map>
 
-#include "../Map/Map.h"
-#include "../Map/State.h"
-#include "../Map/StaticMap.h"
-
+#include "GameLevel.h"
+#include "../NewMap/MapState.h"
 #include "../Stack/Stack.h"
 #include "../Stack/StackFrame.h"
+
+using std::map;
+using std::shared_ptr;
+using std::make_shared;
 
 namespace Sokoban {
 
@@ -20,7 +21,11 @@ namespace SokobanGameLogic {
  * Provides the number of commands useable in-game.
  */
 enum Command {
-	Up, Down, Left, Right, Undo
+	Up,
+	Down,
+	Left,
+	Right,
+	Undo //Reset?
 };
 
 }
@@ -31,6 +36,7 @@ enum Command {
  */
 class GameLogic {
 private:
+	static const map<SokobanGameLogic::Command, Direction> CommandDirections;
 	struct timespec _startTime;
 	struct timespec _endTime;
 	bool _finished;
@@ -40,8 +46,7 @@ private:
 	uint32_t _undoCount;
 	Stack _stack;
 
-	const IStaticMap *_map;
-	IState *_state;
+	shared_ptr<MapState> _map;
 
 	/*
 	 * Checks if all targets have a box on top.
@@ -57,23 +62,26 @@ public:
 	/*
 	 * Destroys this GameLogic object and possibly the saved state.
 	 */
-	~GameLogic();
+	~GameLogic() = default;
 
 	/*
 	 * Resets the internal state to the provided one
 	 */
-	void reset(const IMap *map);
+	void reset(const shared_ptr<const GameLevel> &level);
+	// resets level to beginning
+	void reset();
 
 	/*
 	 * Updates the current state.
 	 * Returns true if the state changed.
 	 */
 	bool update(SokobanGameLogic::Command command);
+	bool undo();
 
 	/*
 	 * Returns the current state.
 	 */
-	const IState* getState() const;
+	shared_ptr<const MapState> getState() const;
 
 	/*
 	 * Returns if this level is currently solved.
@@ -104,4 +112,3 @@ public:
 
 }  // namespace Sokoban
 
-#endif  // PROJEKT_GAME_GAMELOGIC_H_
