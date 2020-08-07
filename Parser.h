@@ -10,7 +10,7 @@
 #include <mutex>
 
 #include "Map/Map.h"
-#include "Map/MapBuilder.h"
+#include "NewMap/MapBuilder.h"
 
 namespace Sokoban {
 using std::mutex;

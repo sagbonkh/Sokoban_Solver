@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include "../Parser.h"
+#include "../NewMap/MapGrid.h"
 
 namespace Sokoban {
 using std::ifstream;
@@ -46,6 +47,7 @@ void GameLevel::load() const {
 		throw "Level could not be read from path "s + _path + " at position "s
 				+ to_string(_pos);
 	}
+	//TODO: call parser
 }
 
 const std::string& GameLevel::getName() const {
@@ -55,7 +57,7 @@ const std::string& GameLevel::getName() const {
 
 }
 
-shared_ptr<IMap> GameLevel::getMap() const {
+const shared_ptr<const MapGrid::initial_map_t>& GameLevel::getMap() const {
 	if (!_map)
 		load();
 	return _map;

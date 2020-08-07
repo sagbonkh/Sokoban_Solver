@@ -13,9 +13,11 @@
 #include "MapState.h"
 #include "../Direction.h"
 #include "CellOccupant.h"
+#include "CellContents.h"
 
 namespace Sokoban {
 using std::shared_ptr;
+using std::make_shared;
 using std::enable_shared_from_this;
 
 class CellOccupant;
@@ -30,6 +32,8 @@ protected:
 	virtual bool canPushOccupantIn(Direction dir);
 
 public:
+	static shared_ptr<Cell> fromCellType(const shared_ptr<MapState> &mapState,
+			const Coordinate &c, const CellContents &type);
 	Cell() = delete;
 	Cell(const Cell&) = delete;
 	Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY);

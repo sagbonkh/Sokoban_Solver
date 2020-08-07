@@ -1,20 +1,31 @@
 // Copyright Tobias Faller 2016
-
-#ifndef PROJEKT_MAP_MAPBUILDER_H_
-#define PROJEKT_MAP_MAPBUILDER_H_
+#pragma once
 
 #include <stdint.h>
 
+#include <set>
+#include <string>
+#include <memory>
 #include <vector>
 #include <utility>
 
-#include "Map.h"
-#include "StaticMap.h"
+#include "MapGrid.h"
 #include "../Coordinate.h"
+
+
+using std::string;
+using std::set;
+using std::vector;
+using std::pair;
+using std::make_pair;
+using std::make_shared;
+using std::shared_ptr;
+using Sokoban::MapGrid;
 
 namespace Sokoban {
 
 namespace SokobanBuilder {
+
 
 /*
  * Defines all possible errors thrown by the MapBuilder class.
@@ -32,17 +43,19 @@ enum Error : uint32_t {
  */
 class MapBuilder {
 private:
-	std::string _title;
-	std::vector<Coordinate> _blocks;
-	std::vector<Coordinate> _boxes;
-	std::vector<Coordinate> _targets;
-
+	string _title;
+	set<Coordinate> _walls, _boxes, _targets;
 	Coordinate _player;
 
-	uint32_t _width;
-	uint32_t _height;
+	map_unit_t _width;
+	map_unit_t _height;
+
+	template<typename T>
+	static bool hasDuplicates(const vector<T> &vec);
 
 public:
+	//	typedef vector<vector<CellContents>> initial_map_t;
+	typedef std::pair<string, shared_ptr<const MapGrid::initial_map_t>> Result;
 	/*
 	 * Creates a new Sokoban MapBuilder to create levels dynamically.
 	 */
@@ -51,7 +64,7 @@ public:
 	/*
 	 * Destroys this builder and its internal state.
 	 */
-	~MapBuilder();
+	~MapBuilder() = default;
 
 	/*
 	 * Creates a new map without destroying the internal state of this builder.
@@ -60,70 +73,71 @@ public:
 	 * If there overlapping components (at the same spot) a SpotTaken error
 	 * will be returned.
 	 */
-	std::pair<SokobanBuilder::Error, const Map*> build() const;
+	std::pair<SokobanBuilder::Error, Result> build() const;
 
 	/*
 	 * Resets the state of this builder to an empty map.
 	 */
-	MapBuilder* reset();
+	MapBuilder& reset();
 
 	/*
 	 * Adds a block at the provided coordinate.
 	 */
-	MapBuilder* addBlock(Coordinate position);
+	MapBuilder& addBlock(Coordinate position);
 
 	/*
 	 * Adds a block at the provided coordinate.
 	 */
-	MapBuilder* addBlock(uint32_t x, uint32_t y);
+	MapBuilder& addBlock(uint32_t x, uint32_t y);
 
 	/*
 	 * Adds a box at the provided coordinate.
 	 */
-	MapBuilder* addBox(Coordinate position);
+	MapBuilder& addBox(Coordinate position);
 
 	/*
 	 * Adds a box at the provided coordinate.
 	 */
-	MapBuilder* addBox(uint32_t x, uint32_t y);
+	MapBuilder& addBox(uint32_t x, uint32_t y);
 
 	/*
 	 * Sets the position of the player to the provided coordinate.
 	 */
-	MapBuilder* setPlayer(Coordinate position);
+	MapBuilder& setPlayer(Coordinate position);
 
 	/*
 	 * Sets the position of the player to the provided coordinate.
 	 */
-	MapBuilder* setPlayer(uint32_t x, uint32_t y);
+	MapBuilder& setPlayer(uint32_t x, uint32_t y);
 
 	/*
 	 * Adds a target to put a box on at the provided coordinate.
 	 */
-	MapBuilder* addTarget(Coordinate position);
+	MapBuilder& addTarget(Coordinate position);
 
 	/*
 	 * Adds a target to put a box on at the provided coordinate.
 	 */
-	MapBuilder* addTarget(uint32_t x, uint32_t y);
+	MapBuilder& addTarget(uint32_t x, uint32_t y);
 
 	/*
 	 * Adds a square of blocks to this builder starting from <from> and going
 	 * to <to> (inclusive).
 	 */
-	MapBuilder* addBlocks(Coordinate from, Coordinate to);
+	MapBuilder& addBlocks(Coordinate from, Coordinate to);
 
 	/*
 	 * Adds a square of blocks to this builder starting from <from> and going
 	 * to <to> (inclusive).
 	 */
-	MapBuilder* addBlocks(uint32_t fromX, uint32_t fromY, uint32_t toX,
+	MapBuilder& addBlocks(uint32_t fromX, uint32_t fromY, uint32_t toX,
 			uint32_t toY);
 
-	void setTitle(const std::string &newTitle);
+	MapBuilder& setTitle(const std::string &newTitle);
 
 };
 
+
+
 }  // namespace Sokoban
 
-#endif  // PROJEKT_MAP_MAPBUILDER_H_

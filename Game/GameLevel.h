@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include "../Map/IMap.h"
+#include "../NewMap/MapGrid.h"
 
 namespace Sokoban {
 using std::istream;
@@ -26,7 +26,7 @@ private:
 	std::string _path;
 	pos_type _pos;
 
-	mutable shared_ptr<IMap> _map = nullptr;
+	mutable shared_ptr<const MapGrid::initial_map_t> _map = nullptr;
 
 	void load(istream &in) const;
 	void load() const;
@@ -43,7 +43,7 @@ public:
 	~GameLevel() = default;
 
 	const std::string& getName() const;
-	shared_ptr<IMap> getMap() const;
+	const shared_ptr<const MapGrid::initial_map_t>& getMap() const;
 
 };
 

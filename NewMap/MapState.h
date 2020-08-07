@@ -17,6 +17,7 @@
 #include "../Map/IStaticMap.h"
 #include "../Map/Map.h"
 #include "../Map/State.h"
+#include "MapGrid.h"
 
 namespace Sokoban {
 
@@ -28,15 +29,17 @@ using std::shared_ptr;
 class Cell;
 class CellOccupant;
 
+
+
 // Map has (Initial) State and StaticMap
 // StaticMap has walls and targets
 // State has Boxes and Player
-class MapState: protected IMap, protected IState, public IStaticMap {
+class MapState {
 	Coordinate player;
 	const uint32_t &_height, &_width;
-	map<Coordinate, shared_ptr<Cell>> cells, initialCells;
+	shared_ptr<MapGrid> _mapGrid;
 
-	void setPlayerPosition(Coordinate playerPosition) override;
+	void setPlayerPosition(Coordinate playerPosition);
 
 public:
 	MapState() = delete;
@@ -49,45 +52,43 @@ public:
 	 * Returns the cell at the provided position of this map
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is thrown.
 	 */
-//	shared_ptr<Cell> get(const Coordinate &position);
-//	shared_ptr<Cell> get(uint32_t x, uint32_t y);
+	shared_ptr<Cell> get(const Coordinate &position);
+	shared_ptr<Cell> get(uint32_t x, uint32_t y);
 	shared_ptr<CellOccupant> getOccupant(const Coordinate &position);
 	shared_ptr<CellOccupant> getOccupant(uint32_t x, uint32_t y);
 
-	bool isTarget(const Coordinate &position) const override;
-	bool isTarget(uint32_t x, uint32_t y) const override;
+	bool isTarget(const Coordinate &position) const;
+	bool isTarget(uint32_t x, uint32_t y) const;
 
 	/*
 	 * Returns the width of the map.
 	 */
-	uint32_t getWidth() const override;
+	uint32_t getWidth() const;
 
 	/*
 	 * Returns the height of the map.
 	 */
-	uint32_t getHeight() const override;
+	uint32_t getHeight() const;
 
 	/*
 	 * Returns positions of items in the map
 	 */
-	Coordinate getPlayerPosition() const override;
+	Coordinate getPlayerPosition() const;
+
 //	const unordered_map<Coordinate, BoxState> getBoxes() const;
-	const std::set<Coordinate>& getTargets() const;
+//	const std::set<Coordinate>& getTargets() const;
 
 	int getNumBoxes() const;
 	int getNumCompletedBoxes() const;
 	int getNumBoxesLeft() const;
 	bool isWon() const;
 
-	const IState* getInitialState() const override;
-	const IStaticMap* getMap() const override;
-	void set(uint32_t x, uint32_t y, Sokoban::StaticType type) override;
-	bool isBlock(const Sokoban::Coordinate &position) const override;
-	bool isEmpty(uint32_t x, uint32_t y) const override;
-	bool isEmpty(const Sokoban::Coordinate &position) const override;
-	void set(const Sokoban::Coordinate &position, Sokoban::StaticType type)
-			override;
-	bool isBlock(uint32_t x, uint32_t y) const override;
+	const shared_ptr<const MapGrid::initial_map_t> getInitialMap() const;
+
+	bool isBlock(const Sokoban::Coordinate &position) const;
+	bool isEmpty(uint32_t x, uint32_t y) const;
+	bool isEmpty(const Sokoban::Coordinate &position) const;
+	bool isBlock(uint32_t x, uint32_t y) const;
 };
 
 } /* namespace Sokoban */

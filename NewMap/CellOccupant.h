@@ -38,11 +38,11 @@ public:
 
 	bool isTarget() const;
 
-	virtual CellOccupantType getType() const;
-	virtual bool isNothing() const;
-	virtual bool isPlayer() const;
-	virtual bool isBox() const;
-	virtual operator bool() const;
+	virtual CellOccupantType getType() const = 0;
+	bool isNothing() const;
+	bool isPlayer() const;
+	bool isBox() const;
+	operator bool() const;
 
 	Coordinate getCoordinate() const;
 	shared_ptr<Cell> getCell() const;

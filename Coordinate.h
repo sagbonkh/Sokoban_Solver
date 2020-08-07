@@ -16,6 +16,13 @@ typedef uint32_t map_unit_t;
 using std::tuple;
 using std::tie;
 using std::initializer_list;
+
+/*
+ * Defines a index out of bounds error.
+ */
+constexpr const map_unit_t INDEX_OUT_OF_BOUNDS = 0xE1;
+
+
 /*
  * Defines a coordinate with x and y position of type map_unit_t.
  */
@@ -39,7 +46,7 @@ struct Coordinate {
 	/*
 	 * Destroys this coordinate object.
 	 */
-	~Coordinate();
+	~Coordinate() = default;
 
 	/*
 	 * Sets the location of this coordinate object.

@@ -16,3 +16,9 @@ Opposite of Static Map. Stores:
 Stores:
 - Static Map
 - Initial State
+
+
+# New Maps
+- GameLevel(s) are created when loading in level file, which lazily loads in the map data
+- GameLevel class has a function to get a MapGrid::initial_map_t, using MapBuilder to generate it
+- When MapState is created, it is given the MapGrid::initial_map_t and creates a MapGrid object with itself and the grid

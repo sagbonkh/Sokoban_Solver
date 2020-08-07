@@ -19,10 +19,6 @@ enum StaticType {
 	Nothing = 0, Block = 1, Target = 2
 };
 
-/*
- * Defines a index out of bounds error.
- */
-constexpr const map_unit_t INDEX_OUT_OF_BOUNDS = 0xE1;
 
 /*
  * Defines the static contents of the current map.

@@ -5,7 +5,11 @@
  *      Author: sidney
  */
 
-#include "../NewMap/Cell.h"
+#include "Cell.h"
+#include "Cells/TargetCell.h"
+#include "Cells/WallCell.h"
+#include "Occupants/Player.h"
+#include "Occupants/Box.h"
 
 namespace Sokoban {
 
@@ -107,6 +111,28 @@ bool Cell::isUnoccupied() const {
 // if the cell is occupy-able (i.e. isn't a boundary)
 bool Cell::canBeOccupied() const {
 	return true;
+}
+
+shared_ptr<Cell> Cell::fromCellType(const shared_ptr<MapState> &mapState,
+		const Coordinate &c, const CellContents &type) {
+	shared_ptr<Cell> cell = nullptr;
+	shared_ptr<CellOccupant> cellOccupant = nullptr;
+
+	if ((type & CellContents::Goal) == CellContents::Goal) {
+		cell = make_shared<TargetCell>(mapState, c);
+	} else if ((type & CellContents::Wall) == CellContents::Wall) {
+		cell = make_shared<WallCell>(mapState, c);
+	} else {
+		cell = make_shared<Cell>(mapState, c);
+	}
+	if ((type & CellContents::Player) == CellContents::Player) {
+		cellOccupant = make_shared<Player>(mapState, getptr());
+	} else if ((type & CellContents::Box) == CellContents::Box) {
+		cellOccupant = make_shared<Box>(mapState, getptr());
+	}
+	if (cellOccupant)
+		cell->setOccupant(cellOccupant);
+	return cell;
 }
 
 std::shared_ptr<Cell> Cell::getptr() {
