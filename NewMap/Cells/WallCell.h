@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../NewMap/Cell.h"
+#include "../Cell.h"
 
 namespace Sokoban {
 
@@ -21,8 +21,7 @@ public:
 
 	virtual bool canBeOccupied() const override;
 	virtual bool isWall() const override;
-	virtual StaticType getStaticType() const override;
-
+	virtual char getDisplayChar() const override;
 };
 
 } /* namespace Sokoban */

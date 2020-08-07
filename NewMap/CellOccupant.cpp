@@ -5,13 +5,13 @@
  *      Author: sidney
  */
 
-#include "../CellOccupant.h"
 
 #include <memory>
 #include <utility>
 
-#include "../Map/MapState.h"
-#include "../NewMap/Cell.h"
+#include "CellOccupant.h"
+#include "MapState.h"
+#include "Cell.h"
 
 namespace Sokoban {
 using std::shared_ptr;

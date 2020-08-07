@@ -118,4 +118,12 @@ uint32_t GameLogic::getUndoCount() const {
 	return _undoCount;
 }
 
+shared_ptr<const MapState> GameLogic::getState() const {
+	return _map;
+}
+
+shared_ptr<const MapGrid> GameLogic::getGrid() const {
+	return _map->getGrid();
+}
+
 }  // namespace Sokoban

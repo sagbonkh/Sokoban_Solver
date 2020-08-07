@@ -1,19 +1,14 @@
 // Copyright Tobias Faller 2016
 
-#ifndef PROJEKT_DISPLAY_CURSESDISPLAY_H_
-#define PROJEKT_DISPLAY_CURSESDISPLAY_H_
+#pragma once
 
-#include "Display.h"
 
 #include <curses.h>
 
-#include "../Map/IMap.h"
-#include "../Map/IStaticMap.h"
-#include "../Map/IState.h"
-
-#include "../Coordinate.h"
-#include "../Size.h"
-#include "../Rectangle.h"
+#include "NewMap/MapGrid.h"
+#include "Coordinate.h"
+#include "Size.h"
+#include "Rectangle.h"
 
 namespace Sokoban {
 
@@ -21,48 +16,44 @@ namespace Sokoban {
  * Provides a interface for a (n)curses driven display.
  * The display provides a basic sheme also used by the sokoban level format.
  */
-class CursesDisplay: public Display {
+class Display {
 protected:
-	WINDOW *_window;
+	bool _valid;
 
-	const IMap *_map;
-	const IStaticMap *_staticMap;
-	const IState *_state;
+	WINDOW *_window;
+	shared_ptr<const MapGrid> _grid;
 
 	bool _enabled;
 	Rectangle _rectangle;
+	Size _scale;
+
 
 public:
 	/*
 	 * Creates a new Display at position (0/0) with
 	 * no map.
 	 */
-	explicit CursesDisplay(WINDOW *window);
+	explicit Display(WINDOW *window);
 
 	/*
 	 * Destroys the Display leaving the window usable.
 	 */
-	virtual ~CursesDisplay();
+	virtual ~Display() = default;
 
 	/*
 	 * Sets the underlying map for this Display.
 	 */
-	void setMap(const IMap *map) override;
+	void setGrid(const shared_ptr<const MapGrid> &grid);
 
 	/*
 	 * Updates the displayed state of this Display.
 	 */
-	void updateState(const IState *state) override;
+	void updateState();
 
 	/*
 	 * Returns the drawn map.
 	 */
-	const IMap* getMap() const;
-
-	/*
-	 * Returns the drawn state.
-	 */
-	const IState* getState() const;
+	const shared_ptr<const MapGrid> getGrid() const;
 
 	/*
 	 * Enables / disables this Display instance.
@@ -109,11 +100,26 @@ public:
 	 */
 	virtual void update();
 
+	/*
+	 * Retrieves if this display was correctly initialized.
+	 */
+	bool isValid() const;
+
+	Size getScale() const;
+	void setScale(const Size &scale);
+
 protected:
-	static char getCharForState(StaticType type, const IState *state,
-			const Coordinate &coordinate);
+
+	/*
+	 * Returns the color for a displayed character.
+	 */
+	static uint16_t getColorForChar(char c);
+
+	/*
+	 * Modifies a character before displaying it.
+	 */
+	static char modifyChar(char c);
 };
 
 }  // namespace Sokoban
 
-#endif  // PROJEKT_DISPLAY_CURSESDISPLAY_H_

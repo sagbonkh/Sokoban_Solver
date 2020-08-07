@@ -8,9 +8,9 @@
 
 #include <string>
 
+#include "../Display.h"
 #include "GameLogic.h"
 
-#include "../Display/ColoredDisplay.h"
 #include "GameLevel.h"
 
 namespace Sokoban {
@@ -40,7 +40,7 @@ private:
 	std::string _directory;
 
 	WINDOW *_window;
-	ColoredDisplay *_display;
+	Display *_display;
 
 	const GameLevel _gameLevel;
 	GameLogic _gameLogic;
@@ -60,14 +60,19 @@ private:
 	/*
 	 * Changes level of a game.
 	 */
-	void changeLevel(const GameLevel &level, const IMap *map);
+	void changeLevel(const GameLevel &level);
 
 	/*
 	 * Handles user input
 	 */
 	bool handleKey();
 
+	void redraw();
+	bool handleFinished();
+	void quit();
+
 public:
+	static const map<int, SokobanGameLogic::Command> KeyCommands;
 	/*
 	 * Creates a new Game instance with a working-directory.
 	 */

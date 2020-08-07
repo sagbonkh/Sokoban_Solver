@@ -4,7 +4,7 @@
  *  Created on: Aug. 5, 2020
  *      Author: sidney
  */
-#include "Cells/TargetCell.h"
+#include "TargetCell.h"
 
 #include <memory>
 
@@ -25,12 +25,18 @@ bool TargetCell::isTarget() const {
 	return true;
 }
 
-TargetCell::operator StaticType() const {
-	return StaticType::Target;
-}
+char TargetCell::getDisplayChar() const {
+	if (isOccupied() && getOccupant()->getType() == CellOccupantType::Player) {
+		return '+'; // Player on target
+	} else if (isOccupied() && getOccupant()->getType() == CellOccupantType::Box) {
+		return '*'; // Box on target
+	} else {
+		return '.'; // Target
+	}
 
-std::shared_ptr<TargetCell> TargetCell::getptr() {
-	return std::enable_shared_from_this<TargetCell>::shared_from_this();
+
+
+
 }
 
 } /* namespace Sokoban */

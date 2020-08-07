@@ -18,6 +18,19 @@
 #include "../Map/StaticMap.h"
 
 namespace Sokoban {
+using SokobanGameLogic::Command;
+const map<int, Command> Game::KeyCommands
+	{
+		{ KEY_UP, Command::Up },
+		{ KEY_DOWN, Command::Down },
+		{ KEY_LEFT, Command::Left },
+		{ KEY_RIGHT, Command::Right },
+		{ 'u', Command::Undo },
+		{ 'U', Command::Undo },
+		{ 'r', Command::Reset },
+		{ 'R', Command::Reset },
+		{ KEY_CLOSE, Command::Quit },
+		{ 'q', Command::Quit } };
 
 Game::Game(const std::string &directory) {
 	_state = SokobanGame::State::Play;
@@ -60,18 +73,17 @@ void Game::play() {
 		usleep(10);
 	}
 }
-
-void Game::changeLevel(const GameLevel &level, const IMap *map) {
-
-	_gameLevel = level;
-	_gameLogic.reset(level.getMap());
-
-	wclear(_window);
-	_display->setMap(map);
-	_display->updateState(_gameLogic.getState());
-	_display->setEnabled(true);
-	wrefresh(_window);
-}
+//TODO: update for switch to MapState
+//void Game::changeLevel(const GameLevel &level) {
+//	_gameLevel = level;
+//	_gameLogic.reset(level);
+//
+//	wclear(_window);
+//	_display->setMap(map);
+//	_display->updateState(_gameLogic.getState());
+//	_display->setEnabled(true);
+//	wrefresh(_window);
+//}
 
 uint32_t Game::initDisplay() {
 	_window = initscr();
@@ -99,58 +111,48 @@ void Game::destroyDisplay() {
 
 bool Game::handleKey() {
 	int key = getch();
-
-	switch (key) {
-		case KEY_CLOSE:  // Quit / Close
-		case 'm':  // Menu
-		case 'q':  // Quit to menu
-			_display->setEnabled(false);
-			return false;
-		case KEY_UP:
-			if (_gameLogic.update(SokobanGameLogic::Command::Up)) _display->updateState(_gameLogic.getState());
-			break;
-		case KEY_DOWN:
-			if (_gameLogic.update(SokobanGameLogic::Command::Down)) _display->updateState(_gameLogic.getState());
-			break;
-		case KEY_LEFT:
-			if (_gameLogic.update(SokobanGameLogic::Command::Left)) _display->updateState(_gameLogic.getState());
-			break;
-		case KEY_RIGHT:
-			if (_gameLogic.update(SokobanGameLogic::Command::Right)) _display->updateState(_gameLogic.getState());
-			break;
-		case 'U':  // undo
-		case 'u':
-			if (_gameLogic.update(SokobanGameLogic::Command::Undo)) _display->updateState(_gameLogic.getState());
-			break;
-		case 'R':  // reset
-		case 'r':
-			_gameLogic.reset(_display->getMap());
-			break;
-		default:
-			break;
+	if (!KeyCommands.contains(key)) {
+		redraw();
+		handleFinished();
+		return false;
 	}
 
-	if (_gameLogic.isFinished()) {
-		_highscoreDisplay->setMap(_mapEntry->getPath());
-		_highscoreDisplay->load();
-
-		HighscoreEntry entry;
-		entry.steps = _gameLogic.getSteps();
-		entry.time = _gameLogic.getTime();
-		entry.name = std::string();
-		_highscoreDisplay->setNewScore(entry);
-
+	Command cmd = KeyCommands[key];
+	if (cmd == Command::Quit) {
 		_display->setEnabled(false);
-		_highscoreDisplay->setEnabled(true);
-
-		werase(_window);
-		_highscoreDisplay->update();
-		wrefresh(_window);
-
-		_state = SokobanGame::State::Highscore;
-		break;
+		return false;
 	}
 
+	if (_gameLogic.update(cmd)) {
+		_display->updateState(_gameLogic.getGrid());
+	}
+
+	if (handleFinished()) return false;
+
+	redraw();
+	return true;
+}
+
+bool Game::handleFinished() {
+	if (!_gameLogic.isFinished()) return false;
+	//TODO: reset game to next level and continue, but for now just quit
+	quit();
+	return true;
+	_display->setEnabled(false);
+
+	_gameLogic.reset();
+
+	werase(_window);
+	wrefresh(_window);
+}
+void Game::quit() {
+	_display->setEnabled(false);
+	_quit = true;
+	werase(_window);
+	wrefresh(_window);
+}
+
+void Game::redraw() {
 	werase(_window);
 	_display->update();
 
@@ -160,10 +162,7 @@ bool Game::handleKey() {
 	wmove(_window, 1, 0);
 	wprintw(_window, "Finished: %s", (_gameLogic.isFinished() ? "yes" : "no"));
 	wrefresh(_window);
-
-	return true;
 }
-
 void Game::setUndoCount(uint32_t count) {
 	_gameLogic.setUndoCount(count);
 }

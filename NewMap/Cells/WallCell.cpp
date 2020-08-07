@@ -26,8 +26,8 @@ bool WallCell::isWall() const {
 	return true;
 }
 
-StaticType WallCell::getStaticType() const {
-	return StaticType::Block;
+char WallCell::getDisplayChar() const {
+	return '#'; // Block
 }
 
 } /* namespace Sokoban */

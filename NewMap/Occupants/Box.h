@@ -21,6 +21,7 @@ public:
 	explicit Box(const Box &other) = default;
 
 	CellOccupantType getType() const override;
+
 };
 
 } /* namespace Sokoban */

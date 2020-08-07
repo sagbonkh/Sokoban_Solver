@@ -25,7 +25,9 @@ enum Command {
 	Down,
 	Left,
 	Right,
-	Undo //Reset?
+	Undo,
+	Reset,
+	Quit
 };
 
 }
@@ -82,6 +84,7 @@ public:
 	 * Returns the current state.
 	 */
 	shared_ptr<const MapState> getState() const;
+	shared_ptr<const MapGrid> getGrid() const;
 
 	/*
 	 * Returns if this level is currently solved.

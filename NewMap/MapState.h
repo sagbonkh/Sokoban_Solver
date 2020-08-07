@@ -79,6 +79,7 @@ public:
 	bool isWon() const;
 
 	const shared_ptr<const MapGrid::initial_map_t> getInitialMap() const;
+	const shared_ptr<const MapGrid> getGrid() const;
 
 	bool isBlock(const Sokoban::Coordinate &position) const;
 	bool isEmpty(uint32_t x, uint32_t y) const;

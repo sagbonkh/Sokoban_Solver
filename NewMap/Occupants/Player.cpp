@@ -9,7 +9,7 @@
 
 namespace Sokoban {
 
-const map<Command, Direction> Player::OppositeDirections
+const map<Direction, Direction> Player::OppositeDirections
 	{
 		{ Direction::Up, Direction::Down },
 		{ Direction::Down, Direction::Up },
@@ -33,7 +33,7 @@ Cell::move_result_t Player::moveIn(Direction dir) {
 
 void Player::reverseMoveIn(Direction initialDir, bool boxMoved) {
 	shared_ptr<Cell> initialCell = getCell();
-	Direction oppositeDir = OppositeDirections[initialDir];
+	Direction oppositeDir = OppositeDirections.at(initialDir);
 	shared_ptr<Cell> newCell = getCell()->getAdjacent(oppositeDir);
 	Cell::move_result_t moveResult = newCell->enterFrom(oppositeDir, getptr());
 	if (!get<2>(moveResult)) throw "Reverse move of player failed!";
@@ -43,5 +43,6 @@ void Player::reverseMoveIn(Direction initialDir, bool boxMoved) {
 	moveResult = currentBoxCell->pushOccupantIn(oppositeDir);
 	if (!get<1>(moveResult)) throw "Reverse move of box failed!";
 }
+
 
 } /* namespace Sokoban */

@@ -13,10 +13,10 @@
 
 namespace Sokoban {
 
-Cell::Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) :
+Cell::Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) noexcept :
 		Coordinate(posX, posY), _mapState(mapState) {
 }
-Cell::Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate) :
+Cell::Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate) noexcept :
 		Coordinate(coordinate), _mapState(mapState) {
 }
 
@@ -115,14 +115,14 @@ Cell::move_result_t Cell::enterFrom(Direction dir,
 		return make_tuple<bool, bool, bool>(false, false, false);
 
 	shared_ptr<Cell> adjCell = getAdjacent(dir);
-	move_result_t push_result = adjCell->pushOccupantIn(dir);
+	const move_result_t push_result = adjCell->pushOccupantIn(dir);
 	// if not successful somehow, abort
 	if (!get<0>(push_result))
 		return make_tuple<bool, bool, bool>(false, false, false);
 
 	shared_ptr<Cell> prevCell = occupant->getCell();
 	prevCell->moveOccupantTo(getptr());
-	return make_tuple<bool, bool, bool>(true, get<1>(push_result), true);
+	return make_tuple<bool, bool, bool>(true, bool(get<1>(push_result)), true);
 }
 
 // if the cell has no occupant
@@ -148,9 +148,9 @@ shared_ptr<Cell> Cell::fromCellType(const shared_ptr<MapState> &mapState,
 		cell = make_shared<Cell>(mapState, c);
 	}
 	if ((type & CellContents::Player) == CellContents::Player) {
-		cellOccupant = make_shared<Player>(mapState, getptr());
+		cellOccupant = make_shared<Player>(mapState, cell);
 	} else if ((type & CellContents::Box) == CellContents::Box) {
-		cellOccupant = make_shared<Box>(mapState, getptr());
+		cellOccupant = make_shared<Box>(mapState, cell);
 	}
 	if (cellOccupant)
 		cell->setOccupant(cellOccupant);
@@ -161,16 +161,22 @@ std::shared_ptr<Cell> Cell::getptr() {
 	return shared_from_this();
 }
 
-StaticType Cell::getStaticType() const {
-	return StaticType::Nothing;
-}
-
-Cell::operator StaticType() const {
-	return getStaticType();
-}
-
 bool Cell::isWall() const {
 	return false;
+}
+
+char Cell::getDisplayChar() const {
+	if (isOccupied() && getOccupant()->getType() == CellOccupantType::Player) {
+		return '@';  // Player
+	} else if (isOccupied() && getOccupant()->getType() == CellOccupantType::Box) {
+		return '$';
+	} else {
+		return ' '; // Nothing (' ')
+	}
+}
+
+Cell::operator char() const {
+	return getDisplayChar();
 }
 
 } /* namespace Sokoban */

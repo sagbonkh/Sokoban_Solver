@@ -19,6 +19,7 @@ using std::string;
  * Defines a map selectable by the LevelSelector class.
  * It holds the name of the map name and its path.
  */
+//TODO: enable shared_from_this
 class GameLevel {
 public:
 	typedef std::istream::pos_type pos_type;

@@ -30,6 +30,7 @@ public:
 	void reverseMoveIn(Direction initialDir, bool boxMoved);
 
 	CellOccupantType getType() const override;
+
 };
 
 } /* namespace Sokoban */

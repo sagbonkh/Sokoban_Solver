@@ -37,22 +37,24 @@ protected:
 	shared_ptr<CellOccupant> _occupant = nullptr;
 	// based on https://stackoverflow.com/a/2986902/1959179
 	using Coordinate::set;
-	virtual move_result_t pushOccupantIn(Direction dir);
-	virtual bool canPushOccupantIn(Direction dir);
 
 public:
 	static shared_ptr<Cell> fromCellType(const shared_ptr<MapState> &mapState,
 			const Coordinate &c, const CellContents &type);
 	Cell() = delete;
 	Cell(const Cell&) = delete;
-	Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY);
-	Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate);
+	Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) noexcept;
+	Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate) noexcept;
 	virtual ~Cell() = default;
 
 	shared_ptr<Cell> getAdjacent(Direction dir) const;
 	shared_ptr<CellOccupant> getOccupant() const;
 	virtual void setOccupant(const shared_ptr<CellOccupant> &occupant);
 	virtual void moveOccupantTo(const shared_ptr<Cell> &other);
+
+	virtual move_result_t pushOccupantIn(Direction dir);
+	virtual bool canPushOccupantIn(Direction dir);
+
 	virtual move_result_t enterFrom(Direction dir,
 			shared_ptr<CellOccupant> occupant);
 	virtual bool canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant);
@@ -65,8 +67,8 @@ public:
 	virtual bool isWall() const;
 	virtual bool hasPlayer() const;
 	virtual bool hasBox() const;
-	virtual StaticType getStaticType() const;
-	operator StaticType() const;
+	virtual char getDisplayChar() const;
+	operator char() const;
 
 	std::shared_ptr<Cell> getptr();
 

@@ -9,14 +9,14 @@
 
 #include <memory>
 
-#include "../Coordinate.h"
-#include "../NewMap/Cell.h"
-#include "../NewMap/MapState.h"
+#include "../../Coordinate.h"
+#include "../Cell.h"
+#include "../MapState.h"
 
 namespace Sokoban {
 using std::enable_shared_from_this;
 
-class TargetCell: public Cell, public enable_shared_from_this<TargetCell> {
+class TargetCell: public Cell {
 public:
 	TargetCell() = delete;
 	TargetCell(const TargetCell&) = delete;
@@ -24,9 +24,8 @@ public:
 	TargetCell(shared_ptr<MapState> mapState, const Coordinate &coordinate);
 	virtual ~TargetCell() = default;
 
-	virtual bool isTarget() const;
-	operator StaticType() const;
-	std::shared_ptr<TargetCell> getptr();
+	virtual bool isTarget() const override;
+	char getDisplayChar() const override;
 };
 
 } /* namespace Sokoban */
