@@ -9,9 +9,9 @@
 
 #include <memory>
 
-#include "../../Coordinate.h"
-#include "../Cell.h"
-#include "../MapState.h"
+#include "Map/Coordinate.h"
+#include "Map/Cell.h"
+#include "Map/MapState.h"
 
 namespace Sokoban {
 using std::enable_shared_from_this;

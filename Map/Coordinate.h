@@ -1,7 +1,6 @@
 // Copyright Tobias Faller 2016
 
-#ifndef PROJEKT_COORDINATE_H_
-#define PROJEKT_COORDINATE_H_
+#pragma once
 
 #include <stdint.h>
 #include <initializer_list>
@@ -9,7 +8,7 @@
 
 #include <functional>
 
-#include "Direction.h"
+#include "Game/Direction.h"
 
 namespace Sokoban {
 typedef uint32_t map_unit_t;
@@ -95,4 +94,3 @@ template<> struct hash<Sokoban::Coordinate> {
 
 }  // namespace std
 
-#endif  // PROJEKT_COORDINATE_H_

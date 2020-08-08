@@ -4,7 +4,7 @@
  *  Created on: Aug. 5, 2020
  *      Author: sidney
  */
-#include "../../Map/Cells/TargetCell.h"
+#include "Map/Cells/TargetCell.h"
 
 #include <memory>
 

@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "../Map/CellContents.h"
+#include "../Level/CellContents.h"
 
 namespace Sokoban {
 const CellContents CellContents::Floor(0);

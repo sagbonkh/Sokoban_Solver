@@ -1,7 +1,5 @@
 // Copyright Tobias Faller 2016
 
-#include "Game.h"
-
 #include <unistd.h>
 #include <curses.h>
 
@@ -9,9 +7,9 @@
 #include <functional>
 #include <utility>
 
-#include "GameLogic.h"
-
-#include "../Display.h"
+#include "Game/Game.h"
+#include "Game/GameLogic.h"
+#include "Display/Display.h"
 
 
 namespace Sokoban {
@@ -51,7 +49,7 @@ Game::Game(const std::string &levelFile) {
 	_display->setRectangle(Rectangle(0, 3, SokobanGame::GAME_WIDTH, SokobanGame::GAME_HEIGHT));
 
 	_gameLogic.setUndoCount(5);
-	_gameLogic.reset(*_currentLevel);
+	resetLevel();
 }
 
 Game::~Game() {
@@ -63,13 +61,10 @@ void Game::play() {
 	if (_state == SokobanGame::State::Invalid) return;
 
 	while (!_quit) {
-		if (!handleKey()) {
-			return;
-		}
-
+		if (!handleKey()) break;
 		usleep(10);
 	}
-	return;
+	debug();
 }
 
 void Game::nextLevel() {
@@ -94,7 +89,7 @@ void Game::resetLevel() {
 uint32_t Game::initDisplay() {
 	_window = initscr();
 	if (!_window) {
-		printf("Could not init curse!");
+		printf("Could not init curses!");
 		return 1;
 	}
 
@@ -117,20 +112,20 @@ void Game::destroyDisplay() {
 
 bool Game::handleKey() {
 	int key = getch();
+
 	if (!KeyCommands.contains(key)) {
 		redraw();
-		handleFinished();
-		return false;
+		if (!_gameLogic.isFinished()) handleFinished();
+		return true;
 	}
 
 	Command cmd = KeyCommands.at(key);
-	if (cmd == Command::Quit) {
-		_display->setEnabled(false);
-		return false;
-	}
+	if (cmd == Command::Quit) return false;
 
-	if (_gameLogic.update(cmd)) _display->updateState();
-	if (handleFinished()) return false;
+	if (_gameLogic.update(cmd)) {
+		_display->updateState();
+		if (handleFinished()) return false;
+	}
 
 	redraw();
 	return true;
@@ -176,6 +171,10 @@ uint32_t Game::getUndoCount() const {
 
 void Game::setScale(const Size &scale) {
 	_display->setScale(scale);
+}
+
+void Game::debug()
+{
 }
 
 Size Game::getScale() const {

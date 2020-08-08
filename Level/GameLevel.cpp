@@ -1,12 +1,12 @@
 // Copyright Tobias Faller 2016
 
-#include "GameLevel.h"
-
+#include <Level/GameLevel.h>
+#include <Level/MapGrid.h>
+#include <Level/Parser.h>
 #include <numeric>
 #include <fstream>
 #include <string>
-#include "../Parser.h"
-#include "../Map/MapGrid.h"
+
 
 namespace Sokoban {
 using std::ifstream;

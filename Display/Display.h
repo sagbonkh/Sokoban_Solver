@@ -5,10 +5,10 @@
 
 #include <curses.h>
 
-#include "Coordinate.h"
-#include "Map/MapGrid.h"
-#include "Size.h"
-#include "Rectangle.h"
+#include "../Level/MapGrid.h"
+#include "Map/Coordinate.h"
+#include "Display/Rectangle.h"
+#include "Display/Size.h"
 
 namespace Sokoban {
 

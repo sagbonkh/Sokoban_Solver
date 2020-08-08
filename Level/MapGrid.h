@@ -12,8 +12,8 @@
 #include <vector>
 #include <type_traits>
 
-#include "../Coordinate.h"
-#include "../Map/CellContents.h"
+#include "../Level/CellContents.h"
+#include "Map/Coordinate.h"
 
 namespace Sokoban {
 using std::vector;

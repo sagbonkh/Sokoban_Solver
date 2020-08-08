@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <map>
 
-#include "../Map/MapState.h"
-#include "GameLevel.h"
-#include "../Stack/Stack.h"
-#include "../Stack/StackFrame.h"
+#include "../Level/GameLevel.h"
+#include "Map/MapState.h"
+#include "Stack/Stack.h"
+#include "Stack/StackFrame.h"
 
 using std::map;
 using std::shared_ptr;

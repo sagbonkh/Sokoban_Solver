@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "../../Map/Occupants/Box.h"
+#include "Map/Occupants/Box.h"
 
 namespace Sokoban {
 
@@ -13,8 +13,8 @@ Box::Box(MapState &mapState, const shared_ptr<Cell> cell) :
 		CellOccupant(mapState, cell) {
 }
 
-CellOccupantType Box::getType() const {
-	return CellOccupantType::Box;
+CellOccupant::Type Box::getType() const {
+	return Type::Box;
 }
 
 } /* namespace Sokoban */

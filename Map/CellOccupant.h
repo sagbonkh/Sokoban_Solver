@@ -8,21 +8,23 @@
 #pragma once
 #include <memory>
 
-#include "../Direction.h"
-#include "../Map/Cell.h"
-#include "../Map/MapState.h"
+#include "Game/Direction.h"
+#include "Map/Cell.h"
+#include "Map/MapState.h"
 
 namespace Sokoban {
 
-enum class CellOccupantType {
-	Nothing = 0, Player = 3, Box = 4,
-};
 
-//Cell Occupant types = empty, boundary, box or person
 using std::shared_ptr;
 using std::enable_shared_from_this;
 
 class CellOccupant: public enable_shared_from_this<CellOccupant> {
+public:
+	enum class Type {
+		None,
+		Player,
+		Box
+	};
 protected:
 	friend Cell;
 	MapState &_mapState;
@@ -38,7 +40,7 @@ public:
 
 	bool isTarget() const;
 
-	virtual CellOccupantType getType() const = 0;
+	virtual CellOccupant::Type getType() const = 0;
 	bool isNothing() const;
 	bool isPlayer() const;
 	bool isBox() const;

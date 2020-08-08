@@ -1,12 +1,10 @@
 // Copyright Tobias Faller
 
-#ifndef PROJEKT_STACK_STACKFRAME_H_
-#define PROJEKT_STACK_STACKFRAME_H_
+#pragma once
 
 #include <stdint.h>
-#include <gtest/gtest_prod.h>
 
-#include "../Direction.h"
+#include "Game/Direction.h"
 
 namespace Sokoban {
 
@@ -14,11 +12,6 @@ namespace Sokoban {
  * Provides a class for updating / storing stack segments.
  */
 class StackFrame {
-	FRIEND_TEST(StackFrame, Constructor);
-	FRIEND_TEST(StackFrame, GetSet);
-	FRIEND_TEST(Stack, PushPop);
-	FRIEND_TEST(Stack, Memory);
-
 	friend class Stack;
 
 private:
@@ -75,4 +68,3 @@ public:
 
 }  // namespace Sokoban
 
-#endif  // PROJEKT_STACK_STACKFRAME_H_

@@ -5,13 +5,12 @@
  *      Author: sidney
  */
 
-#include "../Map/MapState.h"
-
 #include <algorithm>
 #include <functional>
 
-#include "../Map/CellOccupant.h"
-#include "../Map/Occupants/Box.h"
+#include "Map/MapState.h"
+#include "Map/CellOccupant.h"
+#include "Map/Occupants/Box.h"
 
 using std::bind;
 using std::mem_fn;

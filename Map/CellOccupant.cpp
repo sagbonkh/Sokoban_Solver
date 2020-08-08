@@ -5,14 +5,12 @@
  *      Author: sidney
  */
 
-
-#include "../Map/CellOccupant.h"
-
 #include <memory>
 #include <utility>
 
-#include "../Map/Cell.h"
-#include "../Map/MapState.h"
+#include "Map/CellOccupant.h"
+#include "Map/Cell.h"
+#include "Map/MapState.h"
 
 namespace Sokoban {
 using std::shared_ptr;
@@ -36,15 +34,15 @@ bool CellOccupant::isTarget() const {
 }
 
 bool CellOccupant::isNothing() const {
-	return getType() == CellOccupantType::Nothing;
+	return getType() == Type::None;
 }
 
 bool CellOccupant::isPlayer() const {
-	return getType() == CellOccupantType::Player;
+	return getType() == Type::Player;
 }
 
 bool CellOccupant::isBox() const {
-	return getType() == CellOccupantType::Box;
+	return getType() == Type::Box;
 }
 
 CellOccupant::operator bool() const {
@@ -70,8 +68,8 @@ void CellOccupant::updateCell(const shared_ptr<Cell> &cell) {
 	_cell = cell;
 }
 
-CellOccupantType CellOccupant::getType() const {
-	return CellOccupantType::Nothing;
+CellOccupant::Type CellOccupant::getType() const {
+	return Type::None;
 }
 
 } /* namespace Sokoban */

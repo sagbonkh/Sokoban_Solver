@@ -3,15 +3,14 @@
 #ifndef PROJEKT_GAME_GAME_H_
 #define PROJEKT_GAME_GAME_H_
 
-#include <gtest/gtest.h>
 #include <curses.h>
 
 #include <string>
 
-#include "../Display.h"
-#include "GameLogic.h"
+#include "Level/GameLevel.h"
+#include "Display/Display.h"
+#include "Game/GameLogic.h"
 
-#include "GameLevel.h"
 
 namespace Sokoban {
 
@@ -73,6 +72,7 @@ private:
 	void quit();
 
 public:
+	static void debug();
 	static const map<int, SokobanGameLogic::Command> KeyCommands;
 	/*
 	 * Creates a new Game instance with a working-directory.

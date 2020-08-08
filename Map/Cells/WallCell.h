@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../Cell.h"
+#include "Map/Cell.h"
 
 namespace Sokoban {
 

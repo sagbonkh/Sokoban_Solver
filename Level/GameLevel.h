@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include "../Map/MapGrid.h"
+#include "../Level/MapGrid.h"
 
 using std::istream;
 using std::shared_ptr;

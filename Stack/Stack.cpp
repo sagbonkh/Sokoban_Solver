@@ -1,9 +1,9 @@
 // Copyright Tobias Faller 2016
 
-#include "Stack.h"
+#include "Stack/Stack.h"
 
-#include "MemoryBlock.h"
-#include "StackFrame.h"
+#include "Stack/MemoryBlock.h"
+#include "Stack/StackFrame.h"
 
 namespace Sokoban {
 

@@ -1,8 +1,9 @@
 // Copyright Tobias Faller 2016
 
-#include "Rectangle.h"
-#include "Coordinate.h"
-#include "Size.h"
+#include "Display/Rectangle.h"
+
+#include "Map/Coordinate.h"
+#include "Display/Size.h"
 
 namespace Sokoban {
 

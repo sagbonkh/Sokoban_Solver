@@ -1,13 +1,13 @@
 // Copyright Tobias Faller 2016
 
-#include "Display.h"
+#include "Display/Display.h"
 
 #include <curses.h>
 
 #include <algorithm>
 
+#include "../Level/MapGrid.h"
 #include "Map/Cell.h"
-#include "Map/MapGrid.h"
 #include "Map/MapState.h"
 
 namespace Sokoban {
@@ -84,13 +84,14 @@ void Display::update() {
 
 			for (uint32_t x = 0; x < width; x++) {
 				char c = _grid->get(
-					{ x, y })->getDisplayChar();
+						{ x, y })->getDisplayChar();
 
 				wattron(_window, COLOR_PAIR(getColorForChar(c)));
 
 				if (c != ' ' || moved) {
 					if (!moved && (moved = true)) {
-						wmove(_window, _rectangle.y + (y * _scale.height) + subY, _rectangle.x + (x * _scale.width));
+						wmove(_window, _rectangle.y + (y * _scale.height) + subY,
+								_rectangle.x + (x * _scale.width));
 					}
 
 					c = modifyChar(c);

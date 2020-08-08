@@ -12,8 +12,8 @@
 #include <map>
 #include <unordered_map>
 
-#include "../Coordinate.h"
-#include "../Map/MapGrid.h"
+#include "../Level/MapGrid.h"
+#include "Map/Coordinate.h"
 
 using std::map;
 using std::set;

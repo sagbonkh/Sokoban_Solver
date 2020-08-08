@@ -1,10 +1,9 @@
 // Copyright Tobias Faller
 
-#include "StackFrame.h"
-
 #include <stdint.h>
 
-#include "../Direction.h"
+#include "Stack/StackFrame.h"
+#include "Game/Direction.h"
 
 namespace Sokoban {
 

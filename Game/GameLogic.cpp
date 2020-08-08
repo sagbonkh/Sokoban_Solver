@@ -1,18 +1,18 @@
 // Copyright Tobias Faller 2016
 
-#include "GameLogic.h"
 
 #include <utility>
 #include <set>
 #include <ctime>
 
-#include "../Coordinate.h"
-#include "../Map/Cell.h"
-#include "../Map/Occupants/Player.h"
+#include "Game/GameLogic.h"
+#include "Map/Coordinate.h"
+#include "Map/Cell.h"
+#include "Map/Occupants/Player.h"
 
-#include "../Map/MapState.h"
-#include "../Stack/Stack.h"
-#include "../Stack/StackFrame.h"
+#include "Map/MapState.h"
+#include "Stack/Stack.h"
+#include "Stack/StackFrame.h"
 
 using Sokoban::SokobanGameLogic::Command;
 namespace Sokoban {

@@ -5,12 +5,12 @@
  *      Author: sidney
  */
 
-#include "../Map/Cell.h"
+#include "Map/Cell.h"
 
-#include "../Map/Cells/TargetCell.h"
-#include "../Map/Cells/WallCell.h"
-#include "../Map/Occupants/Box.h"
-#include "../Map/Occupants/Player.h"
+#include "Map/Cells/TargetCell.h"
+#include "Map/Cells/WallCell.h"
+#include "Map/Occupants/Box.h"
+#include "Map/Occupants/Player.h"
 
 namespace Sokoban {
 
@@ -87,7 +87,7 @@ Cell::move_result_t Cell::pushOccupantIn(Direction dir) {
 	if (!canPushOccupantIn(dir))
 		return make_tuple<bool, bool, bool>(false, false, false);
 
-	if (getOccupant()->getType() != CellOccupantType::Box) {
+	if (getOccupant()->getType() != CellOccupant::Type::Box) {
 		throw "Invalid move. This function is only meant for boxes.";
 	}
 
@@ -107,7 +107,7 @@ bool Cell::canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant) {
 // and the direction from which the player is entering
 Cell::move_result_t Cell::enterFrom(Direction dir,
 		shared_ptr<CellOccupant> occupant) {
-	if (occupant->getType() != CellOccupantType::Player)
+	if (occupant->getType() != CellOccupant::Type::Player)
 		throw "Invalid move. This function is only meant for the player.";
 
 	// if this cell can't be entered (either because it can't be occupied or because the occupant can't be displaced
@@ -167,9 +167,9 @@ bool Cell::isWall() const {
 }
 
 char Cell::getDisplayChar() const {
-	if (isOccupied() && getOccupant()->getType() == CellOccupantType::Player) {
+	if (isOccupied() && getOccupant()->getType() == CellOccupant::Type::Player) {
 		return '@';  // Player
-	} else if (isOccupied() && getOccupant()->getType() == CellOccupantType::Box) {
+	} else if (isOccupied() && getOccupant()->getType() == CellOccupant::Type::Box) {
 		return '$';
 	} else {
 		return ' '; // Nothing (' ')

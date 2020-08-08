@@ -4,17 +4,19 @@
  *  Created on: Aug. 5, 2020
  *      Author: sidney
  */
-#include "../Map/MapGrid.h"
+
+
+#include "../Level/MapGrid.h"
 
 #include <memory>
 #include <functional>
 #include <algorithm>
 
-#include "../Map/Cell.h"
-#include "../Map/CellOccupant.h"
-#include "../Map/Cells/TargetCell.h"
-#include "../Map/Occupants/Box.h"
-#include "../Map/Occupants/Player.h"
+#include "Map/Cell.h"
+#include "Map/CellOccupant.h"
+#include "Map/Cells/TargetCell.h"
+#include "Map/Occupants/Box.h"
+#include "Map/Occupants/Player.h"
 
 using std::transform;
 using std::shared_ptr;

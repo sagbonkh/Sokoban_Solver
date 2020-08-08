@@ -10,11 +10,11 @@
 #include <memory>
 #include <tuple>
 
-#include "../Coordinate.h"
-#include "../Direction.h"
-#include "../Map/CellContents.h"
-#include "../Map/CellOccupant.h"
-#include "../Map/MapState.h"
+#include "../Level/CellContents.h"
+#include "Map/Coordinate.h"
+#include "Game/Direction.h"
+#include "Map/CellOccupant.h"
+#include "Map/MapState.h"
 
 using std::shared_ptr;
 using std::make_shared;

@@ -5,25 +5,17 @@
  *      Author: sidney
  */
 
-#include "../../Map/Occupants/Player.h"
+#include "Map/Occupants/Player.h"
 
 namespace Sokoban {
-
-const map<Direction, Direction> Player::OppositeDirections
-	{
-		{ Direction::Up, Direction::Down },
-		{ Direction::Down, Direction::Up },
-		{ Direction::Left, Direction::Right },
-		{ Direction::Right, Direction::Left } };
-
 
 Player::Player(MapState &mapState,
 		const shared_ptr<Cell> cell) :
 		CellOccupant(mapState, cell) {
 }
 
-CellOccupantType Player::getType() const {
-	return CellOccupantType::Player;
+CellOccupant::Type Player::getType() const {
+	return Type::Player;
 }
 
 Cell::move_result_t Player::moveIn(Direction dir) {

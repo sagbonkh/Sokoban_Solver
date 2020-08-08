@@ -13,8 +13,10 @@
 #include <functional>
 #include <algorithm>
 #include <utility>
-#include "Map/MapBuilder.h"
 
+#include "Level/MapGrid.h"
+
+using std::string;
 using std::shared_ptr;
 using std::istream;
 using std::function;

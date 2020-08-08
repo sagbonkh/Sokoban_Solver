@@ -1,12 +1,9 @@
 // Copyright Tobias Faller 2016
 
-#ifndef PROJEKT_STACK_STACK_H_
-#define PROJEKT_STACK_STACK_H_
+#pragma once
 
-#include <gtest/gtest.h>
-
-#include "MemoryBlock.h"
-#include "StackFrame.h"
+#include "Stack/MemoryBlock.h"
+#include "Stack/StackFrame.h"
 
 namespace Sokoban {
 
@@ -19,9 +16,6 @@ constexpr const uint32_t MAX_BLOCKS_FREE = 512;
  * This should save memory and runtime (allocation) for using with the solver.
  */
 class Stack {
-	FRIEND_TEST(Stack, Constructor);
-	FRIEND_TEST(Stack, PushPop);
-	FRIEND_TEST(Stack, Memory);
 
 private:
 	SokobanStack::MemoryBlock *_root;
@@ -69,4 +63,3 @@ public:
 
 }  // namespace Sokoban
 
-#endif  // PROJEKT_STACK_STACK_H_

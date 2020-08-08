@@ -5,8 +5,8 @@
 
 #include <stdint.h>
 
-#include "Coordinate.h"
-#include "Size.h"
+#include "Map/Coordinate.h"
+#include "Display/Size.h"
 
 namespace Sokoban {
 

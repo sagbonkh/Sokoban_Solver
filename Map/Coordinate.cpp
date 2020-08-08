@@ -2,9 +2,8 @@
 
 #include <cassert>
 
-#include "Coordinate.h"
-#include "Direction.h"
-#include "OldMap/StaticMap.h"
+#include "Game/Direction.h"
+#include "Map/Coordinate.h"
 
 namespace Sokoban {
 

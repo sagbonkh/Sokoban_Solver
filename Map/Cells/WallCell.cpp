@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "../../Map/Cells/WallCell.h"
+#include "Map/Cells/WallCell.h"
 
 namespace Sokoban {
 

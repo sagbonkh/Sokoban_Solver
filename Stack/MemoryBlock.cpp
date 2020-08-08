@@ -1,6 +1,6 @@
 // Copyright Tobias Faller 2016
 
-#include "../Stack/MemoryBlock.h"
+#include "Stack/MemoryBlock.h"
 
 namespace Sokoban {
 

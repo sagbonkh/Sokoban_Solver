@@ -1,6 +1,6 @@
 // Copyright Tobias Faller 2016
 
-#include "Size.h"
+#include "Display/Size.h"
 
 namespace Sokoban {
 

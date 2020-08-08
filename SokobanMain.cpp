@@ -6,8 +6,9 @@
 #include <cstdio>
 #include <string>
 
+#include "Display/Size.h"
+#include "Misc/debug-trap.h"
 #include "Game/Game.h"
-#include "Size.h"
 
 using std::cout;
 using std::endl;
@@ -22,7 +23,7 @@ int main(int argc, char **argv) {
 	Sokoban::Size scale(0, 0);
 
 	int opt;
-	while ((opt = getopt(argc, argv, "u:x:y:")) != -1) {
+	while ((opt = getopt(argc, argv, "u:x:y:d:")) != -1) {
 		switch (opt) {
 		case 'u':
 			try {
@@ -78,6 +79,9 @@ int main(int argc, char **argv) {
 			}
 
 			break;
+			case 'd':
+				psnip_trap();
+				break;
 		case '?':
 			printUsage(argv[0]);
 			return 1;
@@ -111,6 +115,7 @@ void printUsage(char *prog) {
 	cout << "\tu: Amount of steps which can be undone" << endl;
 	cout << "\tx: Horizontal scale of the display" << endl;
 	cout << "\ty: Vertical scale of the display" << endl;
+	cout << "\td: SIGSTOP immediately and wait for GDB" << endl;
 	cout << endl;
 	cout << "<levels>:" << endl;
 	cout << "\tFile levels can be found in" << endl;

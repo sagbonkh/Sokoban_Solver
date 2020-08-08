@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../Map/CellOccupant.h"
+#include "Map/CellOccupant.h"
 namespace Sokoban {
 using std::shared_ptr;
 using std::enable_shared_from_this;
@@ -20,7 +20,7 @@ public:
 	virtual ~Box() = default;
 	explicit Box(const Box &other) = default;
 
-	CellOccupantType getType() const override;
+	CellOccupant::Type getType() const override;
 
 };
 
