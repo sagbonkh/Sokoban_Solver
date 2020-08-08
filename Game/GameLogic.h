@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <map>
 
+#include "../Map/MapState.h"
 #include "GameLevel.h"
-#include "../NewMap/MapState.h"
 #include "../Stack/Stack.h"
 #include "../Stack/StackFrame.h"
 

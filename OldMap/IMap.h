@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "../Map/IState.h"
-#include "../Map/IStaticMap.h"
+#include "../OldMap/IState.h"
+#include "../OldMap/IStaticMap.h"
 
 namespace Sokoban {
 

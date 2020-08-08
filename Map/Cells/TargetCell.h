@@ -20,8 +20,8 @@ class TargetCell: public Cell {
 public:
 	TargetCell() = delete;
 	TargetCell(const TargetCell&) = delete;
-	TargetCell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY);
-	TargetCell(shared_ptr<MapState> mapState, const Coordinate &coordinate);
+	TargetCell(MapState &mapState, uint32_t posX, uint32_t posY);
+	TargetCell(MapState &mapState, const Coordinate &coordinate);
 	virtual ~TargetCell() = default;
 
 	virtual bool isTarget() const override;

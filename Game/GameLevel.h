@@ -7,20 +7,20 @@
 #include <memory>
 #include <string>
 
-#include "../NewMap/MapGrid.h"
+#include "../Map/MapGrid.h"
 
-namespace Sokoban {
 using std::istream;
 using std::shared_ptr;
 using std::ifstream;
 using std::string;
+using std::enable_shared_from_this;
 
+namespace Sokoban {
 /*
  * Defines a map selectable by the LevelSelector class.
  * It holds the name of the map name and its path.
  */
-//TODO: enable shared_from_this
-class GameLevel {
+class GameLevel: public enable_shared_from_this<GameLevel> {
 public:
 	typedef std::istream::pos_type pos_type;
 private:
@@ -29,6 +29,7 @@ private:
 
 	mutable string _name = "";
 	mutable shared_ptr<const MapGrid::initial_map_t> _map = nullptr;
+	mutable bool _loaded = false;
 
 	void load(istream &in) const;
 	void load() const;
@@ -47,6 +48,11 @@ public:
 	const std::string& getName() const;
 	const shared_ptr<const MapGrid::initial_map_t>& getMap() const;
 
+	std::shared_ptr<const GameLevel> getptr() const;
+	static vector<shared_ptr<const GameLevel>> loadAllFromFile(const string &filename);
+	bool isEmpty() const;
+	operator string() const;
+	operator bool() const;
 };
 
 }  // namespace Sokoban

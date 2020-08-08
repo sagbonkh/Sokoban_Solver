@@ -5,7 +5,7 @@
  *      Author: sidney
  */
 
-#include "Player.h"
+#include "../../Map/Occupants/Player.h"
 
 namespace Sokoban {
 
@@ -17,7 +17,7 @@ const map<Direction, Direction> Player::OppositeDirections
 		{ Direction::Right, Direction::Left } };
 
 
-Player::Player(const shared_ptr<MapState> mapState,
+Player::Player(MapState &mapState,
 		const shared_ptr<Cell> cell) :
 		CellOccupant(mapState, cell) {
 }

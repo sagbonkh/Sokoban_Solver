@@ -5,9 +5,9 @@
 
 #include <gtest/gtest_prod.h>
 
-#include "IMap.h"
-#include "State.h"
-#include "StaticMap.h"
+#include "../OldMap/IMap.h"
+#include "../OldMap/State.h"
+#include "../OldMap/StaticMap.h"
 
 namespace Sokoban {
 

@@ -1,6 +1,6 @@
 // Copyright Tobias Faller
 
-#include "StaticMap.h"
+#include "../OldMap/StaticMap.h"
 
 #include <gtest/gtest.h>
 

@@ -36,13 +36,13 @@ enum State : uint32_t {
 class Game {
 private:
 	SokobanGame::State _state;
-	// TODO: change this
-	std::string _directory;
+	std::string _levelFile;
 
 	WINDOW *_window;
 	Display *_display;
 
-	const GameLevel _gameLevel;
+	vector<shared_ptr<const GameLevel>> _gameLevels;
+	vector<shared_ptr<const GameLevel>>::const_iterator _currentLevel;
 	GameLogic _gameLogic;
 
 	bool _quit;
@@ -60,7 +60,8 @@ private:
 	/*
 	 * Changes level of a game.
 	 */
-	void changeLevel(const GameLevel &level);
+	void nextLevel();
+	void resetLevel();
 
 	/*
 	 * Handles user input

@@ -9,8 +9,8 @@
 #include <vector>
 #include <utility>
 
-#include "MapGrid.h"
 #include "../Coordinate.h"
+#include "../Map/MapGrid.h"
 
 
 using std::string;

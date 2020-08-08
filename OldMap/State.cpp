@@ -1,7 +1,8 @@
 // Copyright Tobias Falelr 2016
 
-#include "State.h"
-#include "IState.h"
+#include "../OldMap/State.h"
+
+#include "../OldMap/IState.h"
 
 namespace Sokoban {
 

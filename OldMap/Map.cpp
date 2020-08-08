@@ -1,6 +1,6 @@
 // Copyright Tobias Faller 2016
 
-#include "Map.h"
+#include "../OldMap/Map.h"
 
 namespace Sokoban {
 

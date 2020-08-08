@@ -6,9 +6,9 @@
 
 #include <algorithm>
 
-#include "NewMap/Cell.h"
-#include "NewMap/MapState.h"
-#include "NewMap/MapGrid.h"
+#include "Map/Cell.h"
+#include "Map/MapGrid.h"
+#include "Map/MapState.h"
 
 namespace Sokoban {
 

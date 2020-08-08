@@ -1,223 +1,158 @@
 // Copyright Tobias Faller 2016
 
-#include "Parser.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
-#include <string>
+#include "Parser.h"
 
-using Sokoban::SokobanParser::Tokens;
-using Sokoban::SokobanParser::Error;
-namespace Sokoban {
 
 using std::make_shared;
+using std::cerr;
+using std::endl;
+using std::string;
+using std::istream;
+using std::ifstream;
+using std::istringstream;
+using std::isspace;
+using std::find_if_not;
+using std::max;
+using std::back_inserter;
+using std::vector;
+using std::bind;
+using std::mem_fn;
+using std::function;
+using std::move;
+using std::size_t;
+using std::for_each;
 
-mutex Parser::parser_in_use_mtx;
 
-Parser::parse_result_t Parser::readFile(const std::string path) {
-	if (path.empty())
-		return parse_result_t("", nullptr);
+using namespace std::placeholders;
+namespace Sokoban {
 
-	FILE *file = fopen(path.c_str(), "r");
-	if (!file)
-		return parse_result_t("", nullptr);
-
-	Parser::parse_result_t result = readStream(file);
-	fclose(file);
-
-	return result;
+Parser::Parser() : _done(false), _error(true) {
 }
 
-shared_ptr<Parser> Parser::_singleton = nullptr;
-
-Parser& Parser::get() {
-	if (!_singleton) {
-		_singleton = shared_ptr<Parser>(new Parser());
-	}
-	return *_singleton;
+Parser Parser::loadFile(const std::string path) {
+	if (path.empty()) return Parser();
+	ifstream in(path);
+	if (!in.is_open()) return Parser();
+	Parser p(in);
+	in.close();
+	return p;
 }
 
-Parser::parse_result_t Parser::readStream(FILE *stream) {
-	lock_guard<mutex> guard(parser_in_use_mtx);
-	return get()._readStream(stream);
+Parser::Parser(istream &stream) {
+	readStream(stream);
 }
 
-Parser::parse_result_t Parser::readStream(std::istream *stream) {
-	lock_guard<mutex> guard(parser_in_use_mtx);
-	return get()._readStream(stream);
+Parser::Parser(const std::string &data) {
+	istringstream in(data);
+	readStream(in);
 }
 
-Parser::parse_result_t Parser::readData(const std::string data) {
-	lock_guard<mutex> guard(parser_in_use_mtx);
-	return get()._readData(data);
-}
+void Parser::readStream(istream &stream) {
+	if (_done) throw "Stream was already read.";
+	_map = make_shared<MapGrid::initial_map_t>();
+	std::string line;
+	uint32_t lineNo = 0;
 
-
-
-uint32_t Parser::tokenizeData(const std::string &data, uint32_t *line) {
-	ssize_t nextTerminator;
-	uint32_t index = 0;
-
-	while (true) {
-		nextTerminator = getNextTerminator(data, index);
-		if ((nextTerminator < 0) || (nextTerminator < index)) {
-			break;
-		}
-
-		if (nextTerminator - index <= 1) {
-			index = nextTerminator + 1;
-			continue;
-		}
-
-		readLine(data.substr(index, nextTerminator - index), *line);
-		(*line)++;
-
-		index = nextTerminator + 1;
+	while (!_done && !_error) {
+		if (stream.eof()) break;
+		getline(stream, line);
+		readLine(line, ++lineNo);
 	}
 
-	return index;
-}
-
-void Parser::addToken(char c, uint32_t x, uint32_t y) {
-	switch (c) {
-	case Tokens::Floor:
-		break;
-	case Tokens::Wall:
-		_mapBuilder.addBlock(x, y);
-		break;
-	case Tokens::Box:
-		_mapBuilder.addBox(x, y);
-		break;
-	case Tokens::BoxOnGoal:
-		_mapBuilder.addBox(x, y);
-		_mapBuilder.addTarget(x, y);
-		break;
-	case Tokens::Player:
-		_mapBuilder.setPlayer(x, y);
-		break;
-	case Tokens::PlayerOnGoal:
-		_mapBuilder.setPlayer(x, y);
-		_mapBuilder.addTarget(x, y);
-		break;
-	case Tokens::Goal:
-		_mapBuilder.addTarget(x, y);
-		break;
-	default:
-		throw Error::InvalidChar;
-	}
-}
-
-Parser::parse_result_t Parser::_readData(std::string data) {
-	_mapBuilder.reset();
-
-	uint32_t line = 0;
-	uint32_t index = tokenizeData(data, &line);
-	if ((index + 1) < data.length())
-		readLine(data.substr(index), line);
-
-	return _mapBuilder.build().second;
-}
-
-Parser::parse_result_t Parser::_readStream(FILE *stream) {
-	_mapBuilder.reset();
-
-	char *buffer = nullptr;
-	size_t bufferLength = 0;
-
-	std::string data;
-
-	int32_t lineLength;
-	uint32_t index = 0;
-	uint32_t line = 0;
-	while ((lineLength = getline(&buffer, &bufferLength, stream)) > 0) {
-		data.append(buffer, buffer + lineLength);
-
-		index = tokenizeData(data, &line);
-		data = data.substr(index, data.size() - index);
+	if (_error) {
+		_map = nullptr;
+		return;
 	}
 
-	if ((index + 1) < data.size())
-		readLine(data.substr(index), line);
+	_height = _map->size();
+	static auto resize_fn_unbound = mem_fn<void(size_t, const CellContents&)>(
+			&vector<CellContents>::resize);
+	static auto resize_fn = bind(resize_fn_unbound, _1, _width, CellContents::Floor);
+	for_each(_map->begin(), _map->end(), resize_fn);
 
-	if (buffer)
-		free(buffer);  // Allocated using malloc
-
-	return _mapBuilder.build().second;
+	// TODO: error check
+	_done = true;
 }
 
-Parser::parse_result_t Parser::_readStream(std::istream *stream) {
-	_mapBuilder.reset();
+void Parser::strip(string &str, const function<bool(const char &c)> &fn) {
+	// Find first non-space character from beginning of string
+	auto begin_it = find_if_not(str.begin(), str.end(), fn);
+	str.erase(str.begin(), begin_it);
 
-	std::string buffer;
-	std::string data;
-
-	uint32_t lineLength;
-	uint32_t index = 0;
-	uint32_t line = 0;
-	for (;;) {
-		std::getline(*stream, data);
-
-		if (data.size() <= 0) {
-			break;
-		}
-		buffer.append(data);
-
-		index = tokenizeData(buffer, &line);
-		buffer = buffer.substr(index, buffer.size() - index);
-	}
-
-	if ((index + 1) < buffer.length())
-		readLine(buffer.substr(index), line);
-
-	auto [error, result] = _mapBuilder.build();
-	if (error != SokobanBuilder::Error::Success)
-		throw "Map Builder failed";
-	return result;
+	// Find first non-space character from end of string
+	auto end_it = find_if_not(str.rbegin(), str.rend(), fn);
+	// TODO: confirm this works with reverse iterators
+	str.erase(end_it.base(), str.end());
 }
 
-ssize_t Parser::getNextTerminator(const std::string &data, uint32_t offset) {
-
-	uint32_t size = data.size();
-	if (offset >= size)
-		return -1;
-
-	bool lineEnd = false;
-	for (uint32_t index = offset; index < size; index++) {
-		switch (data[index]) {
-		case '\r':
-			lineEnd = true;
-			break;
-		case '\n':
-			return index - (lineEnd ? 1 : 0);
-		default:
-			break;
-		}
-	}
-
-	return -1;
+void Parser::stripSpaces(string &str) {
+	static function<bool(const char &c)> is_space_char = [](const char &c) -> bool {
+		if (c == '\0') return true;
+		return isspace(static_cast<unsigned char>(c));
+	};
+	strip(str, is_space_char);
 }
 
-uint32_t Parser::readLine(std::string line, uint32_t lineNumber) {
-	uint32_t size = line.length();
+void Parser::stripNulls(string &str) {
+	static function<bool(const char &c)> is_null_char = [](const char &c) -> bool {
+		return c == '\0';
+	};
+	strip(str, is_null_char);
+}
 
-	for (uint32_t index = 0; index < size; index++) {
-		char c = line[index];
-		switch (c) {
-		case '\r':
-		case '\n':
-			break;
-		case ';':
-			_mapBuilder.setTitle(line.substr(index + 1));
-			break;
 
-		default:
-			addToken(c, index, lineNumber);
-			break;
-		}
+void Parser::readLine(string &line, const uint32_t &lineNumber) {
+	stripNulls(line);
+	if (line.empty()) {
+		_done = true;
+		return;
+	} else if (line.starts_with(';')) {
+		line.erase(0, 1);
+		stripSpaces(line);
+		_name = line;
+		return;
 	}
 
-	return 0;
+	_width = max(_width, static_cast<map_unit_t>(line.size()));
+	vector<CellContents> newLine(_width, CellContents::Floor);
+	function<CellContents(char)> charToCellContents = bind(&CellContents::fromToken, _1);
+
+	try {
+		transform(line.begin(), line.end(), newLine.begin(), charToCellContents);
+	} catch (const std::exception &e) {
+		cerr << "Warning: " << e.what() << endl;
+		_error = true;
+		return;
+	}
+	_map->push_back(move(newLine));
+}
+
+const string& Parser::getName()
+{
+	return _name;
+}
+
+shared_ptr<const MapGrid::initial_map_t> Parser::getMap()
+{
+	return (!_error) ? _map : nullptr;
+}
+
+bool Parser::success() const
+{
+	return !_error;
+}
+
+map_unit_t Parser::getHeight() const
+{
+	return (!_error) ? _height : -1;
+}
+
+map_unit_t Parser::getWidth() const
+{
+	return (!_error) ? _width : -1;
 }
 
 }  // namespace Sokoban

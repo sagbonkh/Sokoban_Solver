@@ -5,8 +5,8 @@
 
 #include <curses.h>
 
-#include "NewMap/MapGrid.h"
 #include "Coordinate.h"
+#include "Map/MapGrid.h"
 #include "Size.h"
 #include "Rectangle.h"
 

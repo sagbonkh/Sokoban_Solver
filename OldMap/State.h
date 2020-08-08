@@ -9,7 +9,7 @@
 
 #include "../BoxState.h"
 #include "../Coordinate.h"
-#include "IState.h"
+#include "../OldMap/IState.h"
 
 namespace Sokoban {
 

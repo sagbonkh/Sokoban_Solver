@@ -1,6 +1,6 @@
 // Copyright Tobias Faller 2016
 
-#include "StaticMap.h"
+#include "../OldMap/StaticMap.h"
 
 #include <string.h>
 

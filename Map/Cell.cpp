@@ -5,18 +5,19 @@
  *      Author: sidney
  */
 
-#include "Cell.h"
-#include "Cells/TargetCell.h"
-#include "Cells/WallCell.h"
-#include "Occupants/Player.h"
-#include "Occupants/Box.h"
+#include "../Map/Cell.h"
+
+#include "../Map/Cells/TargetCell.h"
+#include "../Map/Cells/WallCell.h"
+#include "../Map/Occupants/Box.h"
+#include "../Map/Occupants/Player.h"
 
 namespace Sokoban {
 
-Cell::Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) noexcept :
+Cell::Cell(MapState &mapState, uint32_t posX, uint32_t posY) noexcept :
 		Coordinate(posX, posY), _mapState(mapState) {
 }
-Cell::Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate) noexcept :
+Cell::Cell(MapState &mapState, const Coordinate &coordinate) noexcept :
 		Coordinate(coordinate), _mapState(mapState) {
 }
 
@@ -24,7 +25,7 @@ shared_ptr<CellOccupant> Cell::getOccupant() const {
 	return _occupant;
 }
 
-shared_ptr<MapState> Cell::getMapState() const {
+MapState& Cell::getMapState() const {
 	return _mapState;
 }
 
@@ -62,7 +63,7 @@ bool Cell::hasBox() const {
 
 shared_ptr<Cell> Cell::getAdjacent(Direction dir) const {
 	Coordinate adjCoords = Coordinate::getAdjacent(dir);
-	return _mapState->get(adjCoords);
+	return _mapState.get(adjCoords);
 }
 
 bool Cell::canPushOccupantIn(Direction dir) {
@@ -135,7 +136,7 @@ bool Cell::canBeOccupied() const {
 	return true;
 }
 
-shared_ptr<Cell> Cell::fromCellType(const shared_ptr<MapState> &mapState,
+shared_ptr<Cell> Cell::fromCellType(MapState &mapState,
 		const Coordinate &c, const CellContents &type) {
 	shared_ptr<Cell> cell = nullptr;
 	shared_ptr<CellOccupant> cellOccupant = nullptr;

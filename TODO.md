@@ -28,3 +28,18 @@ Also:
 - clearly specify the biggest and most complex problem your solver can solve in at most 5 minutes.
 - clearly specify the smallest problem that your solver cannot solve in 5 minutes or less. (make a non-trivial effort to find this smallest problem; For example, you could write a program that generates Sokoban puzzles and then solves them)
 - Written report
+
+Bugs:
+- Deal with out-of-bounds coordinates
+
+
+Steps To Check:
+- Loads level files correctly
+- Loads a single level into GameLogic
+- Cells and CellOccupants generate correctly
+- Confirm display
+- Confirm game logic
+
+Next Steps:
+- Ensure able to duplicate MapStates in progress to follow different paths
+- "To Code" section above

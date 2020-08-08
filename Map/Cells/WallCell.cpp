@@ -5,15 +5,15 @@
  *      Author: sidney
  */
 
-#include "WallCell.h"
+#include "../../Map/Cells/WallCell.h"
 
 namespace Sokoban {
 
-WallCell::WallCell(shared_ptr<MapState> mapState, uint32_t posX,
+WallCell::WallCell(MapState &mapState, uint32_t posX,
 		uint32_t posY) :
 		Cell(mapState, posX, posY) {
 }
-WallCell::WallCell(shared_ptr<MapState> mapState,
+WallCell::WallCell(MapState &mapState,
 		const Coordinate &coordinate) :
 		Cell(mapState, coordinate) {
 }

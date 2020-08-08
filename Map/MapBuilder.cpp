@@ -1,6 +1,8 @@
 // Copyright Tobia Faller 2016
 
 
+#include "../Map/MapBuilder.h"
+
 #include <vector>
 #include <algorithm>
 #include <utility>
@@ -8,8 +10,7 @@
 #include <iterator>
 
 #include "../Coordinate.h"
-#include "MapBuilder.h"
-#include "MapGrid.h"
+#include "../Map/MapGrid.h"
 
 
 using Sokoban::SokobanBuilder::Error;

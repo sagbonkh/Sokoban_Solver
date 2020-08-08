@@ -7,11 +7,10 @@
 #include <ctime>
 
 #include "../Coordinate.h"
+#include "../Map/Cell.h"
+#include "../Map/Occupants/Player.h"
 
-#include "../NewMap/MapState.h"
-#include "../NewMap/Cell.h"
-#include "../NewMap/Occupants/Player.h"
-
+#include "../Map/MapState.h"
 #include "../Stack/Stack.h"
 #include "../Stack/StackFrame.h"
 
@@ -48,7 +47,7 @@ bool GameLogic::update(SokobanGameLogic::Command command) {
 	// this means the command was to move the player in a direction
 	StackFrame frame;
 
-	Direction dir = CommandDirections[command];
+	Direction dir = CommandDirections.at(command);
 	Cell::move_result_t move_result = player->moveIn(dir);
 	bool box_moved = get<2>(move_result);
 	++_steps;
@@ -82,7 +81,7 @@ bool GameLogic::isFinished() const {
 }
 
 bool GameLogic::checkFinished() {
-	if (!_map->isWon()) return false;
+	if (!_map->won()) return false;
 
 	clock_gettime(CLOCK_MONOTONIC, &_endTime);
 	_finished = true;

@@ -11,11 +11,8 @@
 
 #include "GameLogic.h"
 
-#include "../Display/ColoredDisplay.h"
+#include "../Display.h"
 
-#include "../Map/Map.h"
-#include "../Map/State.h"
-#include "../Map/StaticMap.h"
 
 namespace Sokoban {
 using SokobanGameLogic::Command;
@@ -32,17 +29,19 @@ const map<int, Command> Game::KeyCommands
 		{ KEY_CLOSE, Command::Quit },
 		{ 'q', Command::Quit } };
 
-Game::Game(const std::string &directory) {
+Game::Game(const std::string &levelFile) {
 	_state = SokobanGame::State::Play;
 	_quit = false;
-	_directory = directory;
+	_levelFile = levelFile;
+	_gameLevels = GameLevel::loadAllFromFile(_levelFile);
+	_currentLevel = _gameLevels.begin();
 
 	if (initDisplay() != 0) {
 		_state = SokobanGame::State::Invalid;
 		return;
 	}
 
-	_display = new ColoredDisplay(_window);
+	_display = new Display(_window);
 	if (!_display->isValid()) {
 		_state = SokobanGame::State::Invalid;
 		return;
@@ -52,13 +51,11 @@ Game::Game(const std::string &directory) {
 	_display->setRectangle(Rectangle(0, 3, SokobanGame::GAME_WIDTH, SokobanGame::GAME_HEIGHT));
 
 	_gameLogic.setUndoCount(5);
+	_gameLogic.reset(*_currentLevel);
 }
 
 Game::~Game() {
 	if (_display) delete _display;
-
-	if (_gameLevel) delete _gameLevel;
-
 	destroyDisplay();
 }
 
@@ -72,18 +69,27 @@ void Game::play() {
 
 		usleep(10);
 	}
+	return;
 }
-//TODO: update for switch to MapState
-//void Game::changeLevel(const GameLevel &level) {
-//	_gameLevel = level;
-//	_gameLogic.reset(level);
-//
-//	wclear(_window);
-//	_display->setMap(map);
-//	_display->updateState(_gameLogic.getState());
-//	_display->setEnabled(true);
-//	wrefresh(_window);
-//}
+
+void Game::nextLevel() {
+	++_currentLevel;
+	if (_currentLevel == _gameLevels.end()) {
+		quit();
+		return;
+	}
+	resetLevel();
+}
+
+void Game::resetLevel() {
+	_gameLogic.reset(*_currentLevel);
+
+	wclear(_window);
+	_display->setGrid(_gameLogic.getGrid());
+	_display->updateState();
+	_display->setEnabled(true);
+	wrefresh(_window);
+}
 
 uint32_t Game::initDisplay() {
 	_window = initscr();
@@ -117,16 +123,13 @@ bool Game::handleKey() {
 		return false;
 	}
 
-	Command cmd = KeyCommands[key];
+	Command cmd = KeyCommands.at(key);
 	if (cmd == Command::Quit) {
 		_display->setEnabled(false);
 		return false;
 	}
 
-	if (_gameLogic.update(cmd)) {
-		_display->updateState(_gameLogic.getGrid());
-	}
-
+	if (_gameLogic.update(cmd)) _display->updateState();
 	if (handleFinished()) return false;
 
 	redraw();

@@ -5,11 +5,11 @@
  *      Author: sidney
  */
 
-#include "Box.h"
+#include "../../Map/Occupants/Box.h"
 
 namespace Sokoban {
 
-Box::Box(const shared_ptr<MapState> mapState, const shared_ptr<Cell> cell) :
+Box::Box(MapState &mapState, const shared_ptr<Cell> cell) :
 		CellOccupant(mapState, cell) {
 }
 

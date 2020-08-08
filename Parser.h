@@ -5,17 +5,22 @@
 #include <stdio.h>
 
 #include <string>
-#include <iostream>
 #include <memory>
-#include <mutex>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cctype>
+#include <functional>
+#include <algorithm>
+#include <utility>
+#include "Map/MapBuilder.h"
 
-#include "Map/Map.h"
-#include "NewMap/MapBuilder.h"
+using std::shared_ptr;
+using std::istream;
+using std::function;
 
 namespace Sokoban {
-using std::mutex;
-using std::lock_guard;
-using std::shared_ptr;
+
 namespace SokobanParser {
 
 enum Tokens : char {
@@ -38,67 +43,32 @@ enum Error : uint32_t {
  * Defines a basic interface for the sokoban level parser.
  */
 class Parser {
+private:
+	bool _done = false;
+	bool _error = false;
+	string _name;
+	map_unit_t _height = 0, _width = 0;
+	shared_ptr<MapGrid::initial_map_t> _map;
 
-	static shared_ptr<Parser> _singleton;
-	static Parser& get();
-	static mutex parser_in_use_mtx;
+	explicit Parser();
+
+	void readLine(string &line, const uint32_t &lineNumber);
+	void readStream(istream &stream);
+	static void strip(string &str, const function<bool(const char &c)> &fn);
+	static void stripSpaces(string &str);
+	static void stripNulls(string &str);
 public:
-	typedef pair<string, shared_ptr<const MapGrid::initial_map_t>> parse_result_t;
-	/*
-	 * Destroys this parser.
-	 */
+
+	Parser(istream &stream);
+	Parser(const std::string &data);
+	static Parser loadFile(const std::string path);
 	~Parser() = default;
 
-	static parse_result_t readStream(FILE *stream);
-	static parse_result_t readStream(std::istream *stream);
-	static parse_result_t readData(const std::string data);
-	static parse_result_t readFile(const std::string path);
-
-private:
-	MapBuilder _mapBuilder;
-
-	/*
-	 * Reads a file stream and interprets it as sokoban level.
-	 */
-	parse_result_t _readStream(FILE *stream);
-
-	/*
-	 * Reads a stream and interprets it as sokoban level.
-	 */
-	parse_result_t _readStream(std::istream *stream);
-
-	/*
-	 * Reads some data and interprets it as sokoban level.
-	 */
-	parse_result_t _readData(const std::string data);
-
-
-	/*
-	 * Creates a new parser for a sokoban map.
-	 */
-	Parser() = default;
-
-	/*
-	 * Parses a line of data and appends it to the MapBuilder.
-	 */
-	uint32_t readLine(std::string line, uint32_t lineNumber);
-
-	/*
-	 * Returns the next vertical separator for this stream.
-	 */
-	ssize_t getNextTerminator(const std::string &data, uint32_t offset);
-	/*
-	 * Interprets the provided Token as object at position x, y and adds
-	 * it to the builder.
-	 */
-	void addToken(char c, uint32_t x, uint32_t y);
-
-	/*
-	 * Small subroutine for splitting a string into lines.
-	 * Returns the remaining chars in the buffer.
-	 */
-	uint32_t tokenizeData(const std::string &data, uint32_t *line);
-
+	const string& getName();
+	shared_ptr<const MapGrid::initial_map_t> getMap();
+	bool success() const;
+	map_unit_t getHeight() const;
+	map_unit_t getWidth() const;
 
 };
 

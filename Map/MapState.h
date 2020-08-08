@@ -13,7 +13,7 @@
 #include <unordered_map>
 
 #include "../Coordinate.h"
-#include "MapGrid.h"
+#include "../Map/MapGrid.h"
 
 using std::map;
 using std::set;
@@ -27,15 +27,10 @@ class CellOccupant;
 class Player;
 
 
-
-
-// Map has (Initial) State and StaticMap
-// StaticMap has walls and targets
-// State has Boxes and Player
 class MapState {
-	Coordinate player;
-	const uint32_t &_height, &_width;
 	shared_ptr<MapGrid> _mapGrid;
+	const uint32_t &_height, &_width;
+
 
 public:
 	MapState() = delete;
@@ -47,44 +42,30 @@ public:
 	 * Returns the cell at the provided position of this map
 	 * If the position is out of this map a INDEX_OUT_OF_BOUNDS exception is thrown.
 	 */
-	shared_ptr<Cell> get(const Coordinate &position);
-	shared_ptr<Cell> get(uint32_t x, uint32_t y);
+	const shared_ptr<Cell>& get(const Coordinate &position);
+	const shared_ptr<Cell>& get(uint32_t x, uint32_t y);
+	const shared_ptr<Cell>& operator[](const Coordinate &c);
+
 	shared_ptr<CellOccupant> getOccupant(const Coordinate &position);
 	shared_ptr<CellOccupant> getOccupant(uint32_t x, uint32_t y);
 
-	bool isTarget(const Coordinate &position) const;
-	bool isTarget(uint32_t x, uint32_t y) const;
 
-	/*
-	 * Returns the width of the map.
-	 */
 	uint32_t getWidth() const;
-
-	/*
-	 * Returns the height of the map.
-	 */
 	uint32_t getHeight() const;
 
-	/*
-	 * Returns positions of items in the map
-	 */
-	const shared_ptr<Player>& getPlayer();
+	const shared_ptr<Player>& getPlayer() const;
+	const set<shared_ptr<Box>>& getBoxes() const;
+	const set<shared_ptr<TargetCell>>& getTargets() const;
 
-//	const unordered_map<Coordinate, BoxState> getBoxes() const;
-//	const std::set<Coordinate>& getTargets() const;
-
-	int getNumBoxes() const;
-	int getNumCompletedBoxes() const;
-	int getNumBoxesLeft() const;
-	bool isWon() const;
+	int numBoxes() const;
+	int numBoxesOnTargets() const;
+	bool won() const;
 
 	const shared_ptr<const MapGrid::initial_map_t> getInitialMap() const;
 	const shared_ptr<const MapGrid> getGrid() const;
 
-	bool isBlock(const Sokoban::Coordinate &position) const;
-	bool isEmpty(uint32_t x, uint32_t y) const;
-	bool isEmpty(const Sokoban::Coordinate &position) const;
-	bool isBlock(uint32_t x, uint32_t y) const;
+	bool isValid(const Coordinate &position) const;
+	bool isValid(uint32_t x, uint32_t y) const;
 };
 
 } /* namespace Sokoban */

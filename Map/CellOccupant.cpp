@@ -6,18 +6,19 @@
  */
 
 
+#include "../Map/CellOccupant.h"
+
 #include <memory>
 #include <utility>
 
-#include "CellOccupant.h"
-#include "MapState.h"
-#include "Cell.h"
+#include "../Map/Cell.h"
+#include "../Map/MapState.h"
 
 namespace Sokoban {
 using std::shared_ptr;
 using std::swap;
 
-CellOccupant::CellOccupant(const shared_ptr<MapState> mapState,
+CellOccupant::CellOccupant(MapState &mapState,
 		const shared_ptr<Cell> cell) :
 		_mapState(mapState), _cell(cell) {
 }
@@ -26,7 +27,7 @@ shared_ptr<Cell> CellOccupant::getCell() const {
 	return _cell;
 }
 
-shared_ptr<MapState> CellOccupant::getMapState() const {
+MapState& CellOccupant::getMapState() {
 	return _mapState;
 }
 
@@ -48,6 +49,10 @@ bool CellOccupant::isBox() const {
 
 CellOccupant::operator bool() const {
 	return !isNothing();
+}
+
+bool CellOccupant::isOnTarget() const {
+	return _cell->isTarget();
 }
 
 shared_ptr<CellOccupant> CellOccupant::getptr() {

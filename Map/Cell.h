@@ -11,10 +11,10 @@
 #include <tuple>
 
 #include "../Coordinate.h"
-#include "MapState.h"
 #include "../Direction.h"
-#include "CellOccupant.h"
-#include "CellContents.h"
+#include "../Map/CellContents.h"
+#include "../Map/CellOccupant.h"
+#include "../Map/MapState.h"
 
 using std::shared_ptr;
 using std::make_shared;
@@ -33,18 +33,18 @@ public:
 	// from a given operation: make_tuple<bool, bool, bool>(success, box_did_move, player_did_move);
 	typedef tuple<bool, bool, bool> move_result_t;
 protected:
-	shared_ptr<MapState> _mapState = nullptr;
+	MapState &_mapState;
 	shared_ptr<CellOccupant> _occupant = nullptr;
 	// based on https://stackoverflow.com/a/2986902/1959179
 	using Coordinate::set;
 
 public:
-	static shared_ptr<Cell> fromCellType(const shared_ptr<MapState> &mapState,
+	static shared_ptr<Cell> fromCellType(MapState &mapState,
 			const Coordinate &c, const CellContents &type);
 	Cell() = delete;
 	Cell(const Cell&) = delete;
-	Cell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY) noexcept;
-	Cell(shared_ptr<MapState> mapState, const Coordinate &coordinate) noexcept;
+	Cell(MapState &mapState, uint32_t posX, uint32_t posY) noexcept;
+	Cell(MapState &mapState, const Coordinate &coordinate) noexcept;
 	virtual ~Cell() = default;
 
 	shared_ptr<Cell> getAdjacent(Direction dir) const;
@@ -59,7 +59,7 @@ public:
 			shared_ptr<CellOccupant> occupant);
 	virtual bool canEnterFrom(Direction dir, shared_ptr<CellOccupant> occupant);
 
-	shared_ptr<MapState> getMapState() const;
+	MapState& getMapState() const;
 	virtual bool canBeOccupied() const;
 	bool isOccupied() const;
 	virtual bool isUnoccupied() const;

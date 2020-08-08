@@ -15,8 +15,8 @@ class WallCell: public Cell {
 public:
 	WallCell() = delete;
 	WallCell(const Cell&) = delete;
-	WallCell(shared_ptr<MapState> mapState, uint32_t posX, uint32_t posY);
-	WallCell(shared_ptr<MapState> mapState, const Coordinate &coordinate);
+	WallCell(MapState &mapState, uint32_t posX, uint32_t posY);
+	WallCell(MapState &mapState, const Coordinate &coordinate);
 	virtual ~WallCell() = default;
 
 	virtual bool canBeOccupied() const override;

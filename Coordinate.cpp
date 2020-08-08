@@ -4,7 +4,7 @@
 
 #include "Coordinate.h"
 #include "Direction.h"
-#include "Map/StaticMap.h"
+#include "OldMap/StaticMap.h"
 
 namespace Sokoban {
 

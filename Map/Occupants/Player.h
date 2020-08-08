@@ -9,7 +9,7 @@
 
 #include <map>
 
-#include "../CellOccupant.h"
+#include "../../Map/CellOccupant.h"
 
 using std::shared_ptr;
 using std::enable_shared_from_this;
@@ -21,7 +21,7 @@ public:
 	static const map<Direction, Direction> OppositeDirections;
 
 	Player() = delete;
-	Player(const shared_ptr<MapState> mapState, const shared_ptr<Cell> cell =
+	Player(MapState &mapState, const shared_ptr<Cell> cell =
 			nullptr);
 	virtual ~Player() = default;
 	explicit Player(const Player &other) = default;

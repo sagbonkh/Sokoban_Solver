@@ -8,6 +8,12 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <map>
+
+using std::string;
+using std::map;
+
 namespace Sokoban {
 
 class CellContents {
@@ -16,6 +22,8 @@ private:
 public:
 	static const CellContents Floor, Goal, Wall, Player, Box, PlayerOnGoal,
 			BoxOnGoal;
+	static const map<char, CellContents> Tokens;
+	static const map<CellContents, char> ReverseTokens;
 
 	CellContents();
 	CellContents(const uint8_t &num);
@@ -37,6 +45,9 @@ public:
 
 	operator bool() const;
 	operator uint8_t() const;
+	operator char() const;
+	operator string() const;
+	static CellContents fromToken(char c);
 };
 
 } /* namespace Sokoban */

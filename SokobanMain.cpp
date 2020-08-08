@@ -85,8 +85,9 @@ int main(int argc, char **argv) {
 			abort();
 		}
 	}
-
-	Sokoban::Game game((optind < argc) ? argv[optind] : ".");
+	if (optind == argc) std::cerr << "No level file specified." << std::endl;
+	std::string levelFile = argv[optind];
+	Sokoban::Game game(levelFile);
 
 	if (undoCount != 0)
 		game.setUndoCount(undoCount);
@@ -112,5 +113,5 @@ void printUsage(char *prog) {
 	cout << "\ty: Vertical scale of the display" << endl;
 	cout << endl;
 	cout << "<levels>:" << endl;
-	cout << "\tDirectory to list level files out of" << endl;
+	cout << "\tFile levels can be found in" << endl;
 }

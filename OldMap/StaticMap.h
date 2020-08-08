@@ -8,9 +8,8 @@
 
 #include <set>
 
-#include "IStaticMap.h"
-
 #include "../Coordinate.h"
+#include "../OldMap/IStaticMap.h"
 
 namespace Sokoban {
 using std::set;
